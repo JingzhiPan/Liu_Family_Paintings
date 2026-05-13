@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>刘家油画藏品目录 | Liu Family Oil Painting Collection</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400;1,500&family=Noto+Serif+SC:wght@300;400;500;600&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&display=swap');
+
+  :root {
+    --bg: #F5F3EE;
+    --bg-warm: #EDEBE5;
+    --bg-card: #FDFCFA;
+    --text: #2A2622;
+    --text-mid: #5C5650;
+    --text-light: #908A82;
+    --text-faint: #B5AFA8;
+    --accent: #7A6548;
+    --accent-soft: #C4B498;
+    --select-bg: #E8F0E4;
+    --select-border: #8BAF7C;
+    --select-text: #4A6B3E;
+    --border: #DBD7CF;
+    --border-light: #E8E5DE;
+    --white: #FDFCFA;
+    --overlay: rgba(18,16,13,0.90);
+    --serif-zh: 'Noto Serif SC','Songti SC','SimSun',serif;
+    --serif-en: 'Cormorant Garamond','Georgia',serif;
+    --sans: 'DM Sans','PingFang SC','Microsoft YaHei',sans-serif;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.04);
+    --shadow-md: 0 4px 16px rgba(0,0,0,0.07);
+    --shadow-lg: 0 8px 32px rgba(0,0,0,0.10);
+  }
+
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{font-size:16px;scroll-behavior:smooth;}
+  body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6;-webkit-font-smoothing:antialiased;}
+
+  /* ── UTILITY ── */
+  .visually-hidden{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);}
+
+  /* ── HEADER ── */
+  .site-header{
+    background:var(--white);border-bottom:1px solid var(--border);
+    padding:3.5rem 2rem 2.5rem;text-align:center;position:relative;
+  }
+  .site-header h1{font-family:var(--serif-zh);font-weight:400;font-size:1.85rem;letter-spacing:0.12em;margin-bottom:0.25rem;}
+  .site-header .subtitle{font-family:var(--serif-en);font-weight:300;font-size:1.1rem;color:var(--text-mid);font-style:italic;letter-spacing:0.06em;}
+  .site-header .tag{display:inline-block;margin-top:1rem;padding:0.25rem 1rem;border:1px solid var(--accent-soft);color:var(--accent);font-size:0.72rem;letter-spacing:0.1em;text-transform:uppercase;}
+
+  /* ── LANG TOGGLE ── */
+  .lang-toggle{position:fixed;top:1rem;right:1.2rem;z-index:200;display:flex;border:1px solid var(--border);border-radius:2px;overflow:hidden;background:var(--white);box-shadow:var(--shadow-sm);}
+  .lang-toggle button{padding:0.3rem 0.7rem;border:none;background:transparent;font-family:var(--sans);font-size:0.72rem;letter-spacing:0.05em;color:var(--text-light);cursor:pointer;transition:all 0.2s;}
+  .lang-toggle button.active{background:var(--text);color:var(--white);}
+
+  /* ── SHORTLIST FLOAT ── */
+  .shortlist-float{
+    position:fixed;bottom:1.5rem;right:1.5rem;z-index:200;
+    background:var(--text);color:var(--white);
+    padding:0.65rem 1.2rem;border-radius:3px;
+    font-size:0.8rem;cursor:pointer;
+    box-shadow:var(--shadow-lg);
+    transition:all 0.25s;display:flex;align-items:center;gap:0.5rem;
+  }
+  .shortlist-float:hover{transform:translateY(-2px);box-shadow:0 12px 36px rgba(0,0,0,0.15);}
+  .shortlist-float .count{background:var(--accent);padding:0.1rem 0.45rem;border-radius:2px;font-size:0.7rem;min-width:1.4rem;text-align:center;}
+  .shortlist-float.empty{opacity:0.5;pointer-events:none;}
+
+  /* ── ARTIST BIOS ── */
+  .bios{max-width:1000px;margin:0 auto;padding:2.5rem 2rem;display:grid;grid-template-columns:1fr 1fr;gap:2.5rem;}
+  .bio-card{padding:1.8rem;background:var(--white);border:1px solid var(--border);}
+  .bio-card h2{font-family:var(--serif-zh);font-weight:500;font-size:1.15rem;margin-bottom:0.15rem;}
+  .bio-card .name-en{font-family:var(--serif-en);font-size:0.92rem;color:var(--text-mid);font-style:italic;margin-bottom:0.8rem;}
+  .bio-card .bio-text{font-size:0.84rem;line-height:1.8;color:var(--text-mid);}
+  .bio-card .count-line{margin-top:1rem;padding-top:0.8rem;border-top:1px solid var(--border-light);font-size:0.75rem;color:var(--accent);letter-spacing:0.04em;}
+
+  /* ── CONTROLS ── */
+  .controls-bar{
+    max-width:1240px;margin:0 auto;padding:1.2rem 2rem;
+    display:flex;align-items:center;flex-wrap:wrap;gap:0.8rem;
+    position:sticky;top:0;z-index:100;background:var(--bg);
+    border-bottom:1px solid var(--border);
+  }
+  .pill-group{display:flex;gap:0;border:1px solid var(--border);border-radius:2px;overflow:hidden;flex-shrink:0;}
+  .pill-group button{
+    padding:0.4rem 0.9rem;border:none;border-right:1px solid var(--border);
+    background:var(--white);font-family:var(--sans);font-size:0.75rem;
+    color:var(--text-light);cursor:pointer;transition:all 0.15s;letter-spacing:0.02em;
+    white-space:nowrap;
+  }
+  .pill-group button:last-child{border-right:none;}
+  .pill-group button.active{background:var(--text);color:var(--white);}
+  .pill-group button:hover:not(.active){background:var(--bg-warm);}
+
+  .search-box{
+    flex:1;min-width:160px;max-width:280px;position:relative;
+  }
+  .search-box input{
+    width:100%;padding:0.4rem 0.8rem 0.4rem 2rem;
+    border:1px solid var(--border);border-radius:2px;
+    background:var(--white);font-family:var(--sans);font-size:0.78rem;
+    color:var(--text);outline:none;transition:border-color 0.2s;
+  }
+  .search-box input:focus{border-color:var(--accent);}
+  .search-box::before{
+    content:'⌕';position:absolute;left:0.7rem;top:50%;transform:translateY(-50%);
+    font-size:0.85rem;color:var(--text-faint);pointer-events:none;
+  }
+
+  .sort-select{
+    padding:0.4rem 0.6rem;border:1px solid var(--border);border-radius:2px;
+    background:var(--white);font-family:var(--sans);font-size:0.75rem;
+    color:var(--text-mid);cursor:pointer;outline:none;
+  }
+
+  .result-info{font-size:0.75rem;color:var(--text-faint);margin-left:auto;white-space:nowrap;}
+
+  /* ── GALLERY GRID ── */
+  .gallery{max-width:1240px;margin:0 auto;padding:1.8rem 2rem;display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:1.5rem;}
+
+  .card{
+    background:var(--bg-card);border:1px solid var(--border);cursor:pointer;
+    transition:transform 0.2s ease,box-shadow 0.2s ease;position:relative;
+    animation:fadeUp 0.35s ease both;
+  }
+  .card:hover{transform:translateY(-2px);box-shadow:var(--shadow-md);}
+
+  .card .thumb{width:100%;aspect-ratio:4/3;overflow:hidden;background:var(--bg-warm);display:flex;align-items:center;justify-content:center;position:relative;}
+  .card .thumb img{width:100%;height:100%;object-fit:cover;transition:transform 0.35s ease;}
+  .card:hover .thumb img{transform:scale(1.03);}
+  .card .thumb .ph{font-family:var(--serif-en);font-size:0.8rem;color:var(--text-faint);font-style:italic;}
+
+  .card .num{position:absolute;top:0.5rem;left:0.5rem;background:var(--white);padding:0.1rem 0.45rem;font-size:0.62rem;color:var(--text-light);border:1px solid var(--border);letter-spacing:0.04em;z-index:2;}
+
+  .card .sel-btn{
+    position:absolute;top:0.5rem;right:0.5rem;width:26px;height:26px;
+    border-radius:2px;border:1.5px solid rgba(255,255,255,0.7);
+    background:rgba(0,0,0,0.2);color:white;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;
+    font-size:0.8rem;z-index:2;transition:all 0.15s;opacity:0;
+  }
+  .card:hover .sel-btn,.card .sel-btn.on{opacity:1;}
+  .card .sel-btn.on{background:var(--select-border);border-color:var(--select-border);}
+
+  .card .info{padding:0.85rem 0.95rem 0.75rem;}
+  .card .info .c-title{font-family:var(--serif-zh);font-size:0.88rem;font-weight:500;margin-bottom:0.1rem;line-height:1.4;}
+  .card .info .c-title-en{font-family:var(--serif-en);font-size:0.8rem;color:var(--text-mid);font-style:italic;margin-bottom:0.35rem;line-height:1.3;}
+  .card .info .c-meta{font-size:0.7rem;color:var(--text-faint);display:flex;justify-content:space-between;align-items:center;}
+  .card .info .c-region{font-size:0.6rem;padding:0.12rem 0.4rem;border:1px solid var(--border-light);color:var(--text-faint);letter-spacing:0.03em;}
+  .card.selected{border-color:var(--select-border);background:var(--select-bg);}
+
+  /* ── LIGHTBOX ── */
+  .lb{display:none;position:fixed;inset:0;z-index:1000;background:var(--overlay);align-items:center;justify-content:center;padding:2rem;}
+  .lb.open{display:flex;}
+  .lb-inner{background:var(--white);max-width:960px;width:100%;max-height:92vh;overflow-y:auto;display:grid;grid-template-columns:1fr 340px;position:relative;}
+  .lb-img{background:var(--bg-warm);display:flex;align-items:center;justify-content:center;min-height:380px;}
+  .lb-img img{width:100%;height:100%;object-fit:contain;max-height:82vh;}
+  .lb-img .ph{font-family:var(--serif-en);color:var(--text-faint);font-style:italic;}
+
+  .lb-side{padding:2.2rem 1.8rem;border-left:1px solid var(--border);overflow-y:auto;}
+  .lb-side .lb-num{font-size:0.68rem;color:var(--text-faint);letter-spacing:0.08em;margin-bottom:0.8rem;}
+  .lb-side h3{font-family:var(--serif-zh);font-weight:500;font-size:1.2rem;margin-bottom:0.15rem;line-height:1.4;}
+  .lb-side .lb-title-en{font-family:var(--serif-en);font-size:0.95rem;color:var(--text-mid);font-style:italic;margin-bottom:1.2rem;}
+
+  .lb-row{display:flex;justify-content:space-between;padding:0.55rem 0;border-bottom:1px solid var(--border-light);font-size:0.8rem;}
+  .lb-row .lb-label{color:var(--text-faint);font-size:0.72rem;letter-spacing:0.03em;}
+  .lb-row .lb-val{text-align:right;color:var(--text);max-width:60%;}
+
+  .lb-desc{margin-top:1.2rem;padding-top:0.8rem;}
+  .lb-desc .lb-desc-label{font-size:0.68rem;color:var(--text-faint);letter-spacing:0.06em;text-transform:uppercase;margin-bottom:0.3rem;}
+  .lb-desc p{font-size:0.82rem;color:var(--text-mid);line-height:1.75;}
+
+  .lb-sel-btn{
+    margin-top:1.4rem;width:100%;padding:0.6rem;border:1.5px solid var(--border);
+    background:var(--white);font-family:var(--sans);font-size:0.78rem;
+    color:var(--text-mid);cursor:pointer;transition:all 0.2s;letter-spacing:0.03em;
+  }
+  .lb-sel-btn:hover{border-color:var(--text);color:var(--text);}
+  .lb-sel-btn.on{background:var(--select-bg);border-color:var(--select-border);color:var(--select-text);}
+
+  .lb-close{position:absolute;top:0.8rem;right:0.8rem;width:32px;height:32px;border:1px solid var(--border);background:var(--white);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1rem;color:var(--text-light);transition:all 0.2s;z-index:10;}
+  .lb-close:hover{background:var(--text);color:var(--white);border-color:var(--text);}
+  .lb-nav{position:absolute;top:50%;transform:translateY(-50%);width:38px;height:38px;border:1px solid rgba(255,255,255,0.25);background:rgba(255,255,255,0.08);color:white;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.15rem;transition:all 0.2s;z-index:10;}
+  .lb-nav:hover{background:rgba(255,255,255,0.2);}
+  .lb-nav.prev{left:-52px;}
+  .lb-nav.next{right:-52px;}
+
+  /* ── SHORTLIST PANEL ── */
+  .sl-panel{
+    position:fixed;inset:0;z-index:1100;display:none;
+  }
+  .sl-panel.open{display:flex;}
+  .sl-overlay{position:absolute;inset:0;background:rgba(0,0,0,0.5);}
+  .sl-drawer{
+    position:absolute;right:0;top:0;bottom:0;width:420px;max-width:90vw;
+    background:var(--white);box-shadow:-4px 0 24px rgba(0,0,0,0.1);
+    display:flex;flex-direction:column;z-index:1;
+  }
+  .sl-header{padding:1.5rem 1.5rem 1rem;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;}
+  .sl-header h3{font-family:var(--serif-zh);font-weight:500;font-size:1.05rem;}
+  .sl-header button{background:none;border:none;font-size:1.1rem;color:var(--text-light);cursor:pointer;}
+  .sl-body{flex:1;overflow-y:auto;padding:1rem 1.5rem;}
+  .sl-item{display:flex;gap:0.8rem;padding:0.8rem 0;border-bottom:1px solid var(--border-light);align-items:center;}
+  .sl-item .sl-thumb{width:64px;height:48px;background:var(--bg-warm);flex-shrink:0;overflow:hidden;display:flex;align-items:center;justify-content:center;}
+  .sl-item .sl-thumb img{width:100%;height:100%;object-fit:cover;}
+  .sl-item .sl-info{flex:1;min-width:0;}
+  .sl-item .sl-info .sl-t{font-size:0.82rem;font-family:var(--serif-zh);}
+  .sl-item .sl-info .sl-m{font-size:0.7rem;color:var(--text-faint);}
+  .sl-item .sl-rm{background:none;border:none;color:var(--text-faint);cursor:pointer;font-size:0.85rem;padding:0.3rem;flex-shrink:0;}
+  .sl-item .sl-rm:hover{color:var(--text);}
+  .sl-empty{text-align:center;padding:3rem 1rem;color:var(--text-faint);font-size:0.85rem;}
+  .sl-footer{padding:1rem 1.5rem;border-top:1px solid var(--border);display:flex;gap:0.6rem;}
+  .sl-footer button{
+    flex:1;padding:0.55rem;border:1px solid var(--border);background:var(--white);
+    font-family:var(--sans);font-size:0.78rem;color:var(--text-mid);cursor:pointer;
+    transition:all 0.15s;
+  }
+  .sl-footer button:hover{border-color:var(--text);color:var(--text);}
+  .sl-footer button.primary{background:var(--text);color:var(--white);border-color:var(--text);}
+  .sl-footer button.primary:hover{opacity:0.9;}
+
+  /* ── FOOTER ── */
+  footer{max-width:1000px;margin:2.5rem auto 0;padding:1.8rem 2rem;border-top:1px solid var(--border);text-align:center;font-size:0.75rem;color:var(--text-faint);line-height:1.8;}
+  footer .contact{margin-top:0.4rem;color:var(--accent);}
+
+  /* ── RESPONSIVE ── */
+  @media(max-width:768px){
+    .site-header{padding:2.5rem 1.2rem 2rem;}
+    .site-header h1{font-size:1.4rem;}
+    .bios{grid-template-columns:1fr;gap:1.2rem;padding:1.5rem 1.2rem;}
+    .controls-bar{padding:0.8rem 1.2rem;gap:0.5rem;}
+    .gallery{grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:1rem;padding:1.2rem;}
+    .lb-inner{grid-template-columns:1fr;}
+    .lb-side{border-left:none;border-top:1px solid var(--border);}
+    .lb-nav.prev{left:0.5rem;}.lb-nav.next{right:0.5rem;}
+    .sl-drawer{width:100%;max-width:100%;}
+    .search-box{min-width:120px;}
+  }
+
+  @media print{
+    .lang-toggle,.controls-bar,.lb,.shortlist-float,.sl-panel,.sel-btn,.search-box,.sort-select{display:none!important;}
+    .gallery{grid-template-columns:repeat(3,1fr);gap:0.8rem;}
+    .card{break-inside:avoid;box-shadow:none!important;transform:none!important;}
+    body{background:white;}
+  }
+
+  @keyframes fadeUp{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:translateY(0);}}
+</style>
+</head>
+<body>
+
+<div class="lang-toggle">
+  <button onclick="setLang('zh')">中文</button>
+  <button class="active" onclick="setLang('en')">EN</button>
+</div>
+
+<header class="site-header">
+  <h1 class="i18n" data-zh="刘家油画藏品目录" data-en="Liu Family Oil Painting Collection">刘家油画藏品目录</h1>
+  <div class="subtitle i18n" data-zh="捐赠参考目录" data-en="Donation Reference Catalog">捐赠参考目录</div>
+  <div class="tag i18n" data-zh="供博物馆评估与遴选 · 共 87 幅" data-en="For Museum Evaluation & Selection · 87 Works">供博物馆评估与遴选 · 共 87 幅</div>
+</header>
+
+<section class="bios">
+  <div class="bio-card">
+    <h2>刘南生</h2>
+    <div class="name-en">Nansheng Liu</div>
+    <div class="bio-text i18n"
+      data-zh="在此填写刘南生先生的艺术生涯简介——师承、风格特点、重要展览或收藏经历等。"
+      data-en="Brief biography of Nansheng Liu's artistic career — training, stylistic characteristics, notable exhibitions or collections.">
+      在此填写刘南生先生的艺术生涯简介——师承、风格特点、重要展览或收藏经历等。
+    </div>
+    <div class="count-line" id="countGrandfather"></div>
+  </div>
+  <div class="bio-card">
+    <h2>刘韧</h2>
+    <div class="name-en">Ren Liu</div>
+    <div class="bio-text i18n"
+      data-zh="在此填写刘韧先生的艺术生涯简介——师承、风格特点、重要展览或收藏经历等。"
+      data-en="Brief biography of Ren Liu's artistic career — training, stylistic characteristics, notable exhibitions or collections.">
+      在此填写刘韧先生的艺术生涯简介——师承、风格特点、重要展览或收藏经历等。
+    </div>
+    <div class="count-line" id="countFather"></div>
+  </div>
+</section>
+
+<div class="controls-bar">
+  <div class="pill-group" id="artistFilter">
+    <button class="active" data-v="all" data-zh="全部" data-en="All">全部</button>
+    <button data-v="grandfather" data-zh="刘南生" data-en="Nansheng Liu">刘南生</button>
+    <button data-v="father" data-zh="刘韧" data-en="Ren Liu">刘韧</button>
+  </div>
+  <div class="pill-group" id="regionFilter">
+    <button class="active" data-v="all" data-zh="全部地域" data-en="All Regions">全部地域</button>
+    <button data-v="xinjiang" data-zh="新疆" data-en="Xinjiang">新疆</button>
+    <button data-v="africa" data-zh="非洲" data-en="Africa">非洲</button>
+    <button data-v="southwest" data-zh="西南中国" data-en="SW China">西南中国</button>
+    <button data-v="americas" data-zh="美洲" data-en="Americas">美洲</button>
+    <button data-v="tibet" data-zh="西藏" data-en="Tibet">西藏</button>
+  </div>
+  <div class="search-box"><input type="text" id="searchInput" placeholder="Search title or description…"></div>
+  <select class="sort-select" id="sortSelect">
+    <option value="id" data-zh="默认顺序" data-en="Default">默认顺序</option>
+    <option value="year-asc" data-zh="年份 ↑" data-en="Year ↑">年份 ↑</option>
+    <option value="year-desc" data-zh="年份 ↓" data-en="Year ↓">年份 ↓</option>
+  </select>
+  <div class="result-info" id="resultInfo"></div>
+</div>
+
+<div class="gallery" id="gallery"></div>
+
+<!-- Lightbox -->
+<div class="lb" id="lb" onclick="closeLB(event)">
+  <button class="lb-nav prev" onclick="navLB(-1,event)">‹</button>
+  <div class="lb-inner" onclick="event.stopPropagation()">
+    <button class="lb-close" onclick="closeLB()">✕</button>
+    <div class="lb-img" id="lbImg"></div>
+    <div class="lb-side" id="lbSide"></div>
+  </div>
+  <button class="lb-nav next" onclick="navLB(1,event)">›</button>
+</div>
+
+<!-- Shortlist Float Button -->
+<div class="shortlist-float empty" id="slFloat" onclick="openSL()">
+  <span class="i18n" data-zh="遴选清单" data-en="Shortlist">遴选清单</span>
+  <span class="count" id="slCount">0</span>
+</div>
+
+<!-- Shortlist Panel -->
+<div class="sl-panel" id="slPanel">
+  <div class="sl-overlay" onclick="closeSL()"></div>
+  <div class="sl-drawer">
+    <div class="sl-header">
+      <h3 class="i18n" data-zh="遴选清单" data-en="Shortlist">遴选清单</h3>
+      <button onclick="closeSL()">✕</button>
+    </div>
+    <div class="sl-body" id="slBody"></div>
+    <div class="sl-footer">
+      <button onclick="clearSL()" class="i18n" data-zh="清空" data-en="Clear All">清空</button>
+      <button onclick="exportSL()" class="primary i18n" data-zh="导出清单" data-en="Export List">导出清单</button>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="i18n" data-zh="本目录仅供博物馆评估与遴选参考使用" data-en="This catalog is for museum evaluation and selection reference only">本目录仅供博物馆评估与遴选参考使用</div>
+  <div class="contact i18n" data-zh="联系方式：[在此填写]" data-en="Contact: [fill in here]">联系方式：[在此填写]</div>
+</footer>
+
+<script>
+const paintings = [{"id": 1, "title_zh": "门前的女孩", "title_en": "A Tibetan Girl in Front of the Gate", "artist": "father", "artist_zh": "刘韧", "artist_en": "Ren Liu", "year": "—", "dimensions": "36″ × 48″", "desc_zh": "藏族小女孩身着盛装怀抱羔羊，依朱红寺门而坐。浓烈色彩并置出高原孩童的纯真与圣境之器物的庄重。", "desc_en": "A Tibetan girl in festive dress cradles a lamb beside a vermilion temple gate; saturated reds juxtapose childhood innocence with the gravity of sacred space.", "region": "tibet", "filename": "A Tibet girl in front of the gate 门前的女孩 36” × 48”.JPG", "image": "images/A Tibet girl in front of the gate 门前的女孩 36” × 48”.JPG", "year_note": ""}, {"id": 2, "title_zh": "诵经", "title_en": "Chanting", "artist": "father", "artist_zh": "刘韧", "artist_en": "Ren Liu", "year": "—", "dimensions": "36″ × 48″", "desc_zh": "藏族老妇身着红袍，手持转经筒与念珠，端坐于柔光环绕的背景前。画面凝结日常诵经中的虔敬与持守。", "desc_en": "An elderly Tibetan woman in red robes holds a prayer wheel and beads against a softly luminous backdrop—a portrait of quiet, sustained devotion.", "region": "tibet", "filename": "Chanting诵经 36” × 48”.JPG", "image": "images/Chanting诵经 36” × 48”.JPG", "year_note": ""}, {"id": 3, "title_zh": "圣之旅", "title_en": "Holy Journey", "artist": "father", "artist_zh": "刘韧", "artist_en": "Ren Liu", "year": "—", "dimensions": "56.5″ × 62.8″", "desc_zh": "朝圣妇人倚石而立，远处雪山苍茫，长路延伸至天际，足下置酥油壶等行装。色调沉静，定格朝圣途中的歇息一刻。", "desc_en": "A pilgrim pauses against a roadside stone, snow peaks and an empty road behind her; muted tones distill a long pilgrimage into a single quiet breath.", "region": "tibet", "filename": "Holy Journey 圣之旅 56.5” × 62.8”.JPG", "image": "images/Holy Journey 圣之旅 56.5” × 62.8”.JPG", "year_note": ""}, {"id": 4, "title_zh": "圣洁", "title_en": "Sanctity", "artist": "father", "artist_zh": "刘韧", "artist_en": "Ren Liu", "year": "—", "dimensions": "56.5″ × 62.8″", "desc_zh": "信徒在晨曦中行五体投地之礼，金光自经幡间倾泻，远处寺院隐现。逆光剪影强化朝拜的庄严节奏。", "desc_en": "Pilgrims prostrate at dawn beneath prayer flags as golden light pours over the stones, a monastery visible beyond; backlit silhouettes heighten ritual gravity.", "region": "tibet", "filename": "Sanctity  圣洁 56.5” × 62.8” .jpg", "image": "images/Sanctity  圣洁 56.5” × 62.8” .jpg", "year_note": ""}, {"id": 5, "title_zh": "做奶酪", "title_en": "Making Cheeses", "artist": "grandfather", "artist_zh": "刘南生", "artist_en": "Nansheng Liu", "year": "1980", "dimensions": "65.5 × 50.3 cm", "desc_zh": "哈萨克牧妇头扎红巾，在山坡草地上以木桶搅制奶酪，身后孩童与小牛相伴。明亮光线记录牧区日常劳作。", "desc_en": "A Kazakh woman in a red headscarf churns cheese in a wooden barrel on a grass slope, children and calves nearby; bright daylight records pastoral routine.", "region": "xinjiang", "filename": "1980 Making Cheeses做奶酪 65.5x50.3cm.JPG", "image": "images/1980 Making Cheeses做奶酪 65.5x50.3cm.JPG", "year_note": ""}, {"id": 6, "title_zh": "賽里木湖之歌", "title_en": "Sayram Lake", "artist": "grandfather", "artist_zh": "刘南生", "artist_en": "Nansheng Liu", "year": "1980", "dimensions": "104.5 × 70.5 cm", "desc_zh": "黄昏赛里木湖畔，牧民围坐于篝火旁，吹笛弹琴，远处牛羊点染暮色。逆光剪影营造草原诗意。", "desc_en": "At dusk by Sayram Lake, herders gather around a fire with flute and strings; backlit silhouettes against a luminous lake compose a steppe nocturne.", "region": "xinjiang", "filename": "1980 Sayram Lake 賽里木湖之歌 104.5x70.5 cm.jpg", "image": "images/1980 Sayram Lake 賽里木湖之歌 104.5x70.5 cm.jpg", "year_note": ""}, {"id": 7, "title_zh": "剪羊毛", "title_en": "Shearing", "artist": "grandfather", "artist_zh": "刘南生", "artist_en": "Nansheng Liu", "year": "1980", "dimensions": "116 × 78 cm", "desc_zh": "哈萨克牧人头戴白毡帽，腰挂剪刀，足旁伫立绵羊。蓝青冷调与厚实笔触刻画劳作者的体格与神情。", "desc_en": "A Kazakh shepherd in a white felt cap stands among sheep with shears at his belt; thick blue-cool brushwork emphasizes his solid stance and gaze.", "region": "xinjiang", "filename": "1980 Shearing 剪羊毛 116x78 cm .jpg", "image": "images/1980 Shearing 剪羊毛 116x78 cm .jpg", "year_note": ""}, {"id": 8, "title_zh": "休憩", "title_en": "Taking a Break", "artist": "grandfather", "artist_zh": "刘南生", "artist_en": "Nansheng Liu", "year": "1980", "dimensions": "74 × 54.3 cm", "desc_zh": "维吾尔老人席地而坐，托腮凝望，身旁可见驴车与农具。暖黄背景中流露日间劳作后的静默与思索。", "desc_en": "An Uyghur elder rests his head on his hand, a donkey and cart wheel behind him; warm ochre tones suggest a midday pause weighted with thought.", "region": "xinjiang", "filename": "1980 Taking a Break 休憩 74x54.3cm.jpg", "image": "images/1980 Taking a Break 休憩 74x54.3cm.jpg", "year_note": ""}, {"id": 9, "title_zh": "清真寺", "title_en": "Mosque", "artist": "grandfather", "artist_zh": "刘南生", "artist_en": "Nansheng Liu", "year": "1981", "dimensions": "14.75 × 15.75 cm", "desc_zh": "小幅写生记录新疆清真寺：青绿圆顶与高耸宣礼塔，门前人物与驴车点景。色调清淡，似旅途速写。", "desc_en": "A small plein-air study of a Xinjiang mosque: teal dome, slender minarets, figures and a donkey cart at the gate—pale tones lend travel-sketch immediacy.", "region": "xinjiang", "filename": "1981 Mosque 清真寺5.8×6.2“ 14.75×15.75cm .JPG", "image": "images/1981 Mosque 清真寺5.8×6.2“ 14.75×15.75cm .JPG", "year_note": ""}, {"id": 10, "title_zh": "山鷹", "title_en": "The Mountain Eagle", "artist": "grandfather", "artist_zh": "刘南生", "artist_en": "Nansheng Liu", "year": "1981", "dimensions": "128.8 × 114.6 cm", "desc_zh": "哈萨克猎人披厚黑毛皮立于黄崖之前，目光坚毅；远空一只鹰盘旋。质朴的肌理勾勒出山地族群的硬朗气性。", "desc_en": "A Kazakh hunter in heavy black furs stands before ochre cliffs as an eagle wheels above; rugged impasto evokes the toughness of mountain peoples.", "region": "xinjiang", "filename": "1981 the Mountain Eagle 山鷹 128.8x114.6 cm 50.7“ x 45.1”    .jpg", "image": "images/1981 the Mountain Eagle 山鷹 128.8x114.6 cm 50.7“ x 45.1”    .jpg", "year_note": ""}, {"id": 11, "title_zh": "晚归", "title_en": "Going Back Home", "artist": "grandfather", "artist_zh": "刘南生", "artist_en": "Nansheng Liu", "year": "1982", "dimensions": "109.5 × 76 cm", "desc_zh": "暮色中农家土门洞内透出暖光，妇人挑担归家，门外驴车与羊羔散立。暖紫与赭色对比烘托归途的安宁。", "desc_en": "Warm light spills from a rammed-earth gateway at dusk as a woman returns with her load, donkey cart and lambs at the threshold—a quiet homecoming.", "region": "xinjiang", "filename": "1982 Going back home 晚归 109.5x76cm.jpg", "image": "images/1982 Going back home 晚归 109.5x76cm.jpg", "year_note": ""}, {"id": 12, "title_zh": "巴扎", "title_en": "Bazaar", "artist": "grandfather", "artist_zh": "刘南生", "artist_en": "Nansheng Liu", "year": "1983", "dimensions": "79.8 × 54 cm", "desc_zh": "速写式构图记录新疆集市清晨：尖塔圆顶矗立土黄街市，剪影般的人群与驴车攘动。粗放笔触强化纪实感。", "desc_en": "A swift sketch of an early Xinjiang bazaar: minaret and dome over ochre streets, silhouetted crowds and donkey carts—loose brushwork heightens documentary feel.", "region": "xinjiang", "filename": "1983  Bazaar 巴扎 79.8x54cm.jpg", "image": "images/1983  Bazaar 巴扎 79.8x54cm.jpg", "year_note": ""}, {"id": 13, "title_zh": "桥头鞋匠", "title_en": "A Shoemaker", "artist": "grandfather", "artist_zh": "刘南生", "artist_en": "Nansheng Liu", "year": "1983", "dimensions": "72.5 × 53.8 cm", "desc_zh": "桥头老鞋匠身着红袍，端坐木架下专注劳作，背景斑驳树影。人物的银须与红衣形成画面焦点。", "desc_en": "A bearded shoemaker in a red robe works intently beneath a wooden frame, dappled foliage behind him; his white beard against red robe anchors the composition.", "region": "xinjiang", "filename": "1983 A Shoemaker 桥头鞋匠 72.5x 53.8cm.jpg", "image": "images/1983 A Shoemaker 桥头鞋匠 72.5x 53.8cm.jpg", "year_note": ""}, {"id": 14, "title_zh": "牧民转场", "title_en": "Kazakh Herdsmen's Seasonal Migration", "artist": "grandfather", "artist_zh": "刘南生", "artist_en": "Nansheng Liu", "year": "1984", "dimensions": "75.5 × 50.5 cm", "desc_zh": "横幅风景：广阔湖面与远山，前景哈萨克转场队伍——驼马驮货、牧人骑行。云天广大，凸显迁徙的微小与壮阔。", "desc_en": "A wide landscape: lake and distant mountains with a Kazakh migration of camels and riders threading the foreground—vast skies dwarf the procession into epic scale.", "region": "xinjiang", "filename": "1984 Kazakh Herdsmen's Seasonal Migration 牧民转场 75.5x50.5cm.JPG", "image": "images/1984 Kazakh Herdsmen's Seasonal Migration 牧民转场 75.5x50.5cm.JPG", "year_note": ""}, {"id": 15, "title_zh": "天山深处", "title_en": "Neighbors", "artist": "grandfather", "artist_zh": "刘南生", "artist_en": "Nansheng Liu", "year": "1988", "dimensions": "57.5 × 100.5 cm", "desc_zh": "夜色中的山中木屋，群马拴于屋前，两位牧人与黄牛相会于门廊。深蓝调与暖窗光暗示天山深处的邻里温情。", "desc_en": "A timber cabin at night, horses tethered out front, two herders meeting by the porch; deep blue and warm window light evoke neighborly warmth in the Tianshan.", "region": "xinjiang", "filename": "1988 Neighbors 天山深处 57.5x100.5cm.JPG", "image": "images/1988 Neighbors 天山深处 57.5x100.5cm.JPG", "year_note": ""}, {"id": 16, "title_zh": "骑毛驴的老人", "title_en": "A Man Riding a Donkey", "artist": "grandfather", "artist_zh": "刘南生", "artist_en": "Nansheng Liu", "year": "1989", "dimensions": "54 × 73 cm", "desc_zh": "紫调街巷中，白须维吾尔老人骑驴缓行，远处小女孩驻足。建筑被表现性笔触切分成色块，赋予老街梦境感。", "desc_en": "A bearded Uyghur elder rides a donkey through a purple-toned alley, a small girl beyond; expressive color blocks give the old street a dream-like cast.", "region": "xinjiang", "filename": "1989 A Man Riding a Donkey  骑毛驴的老人  21×28.5in  54×73.JPG", "image": "images/1989 A Man Riding a Donkey  骑毛驴的老人  21×28.5in  54×73.JPG", "year_note": ""}, {"id": 17, "title_zh": "哈密小街", "title_en": "A Street in Hami City", "artist": "grandfather", "artist_zh": "刘南生", "artist_en": "Nansheng Liu", "year": "1989", "dimensions": "82.5 × 49 cm", "desc_zh": "横幅小街景：白杨夹道，远处灰土拱门厚重。土黄底色与点描笔触营造哈密小街的清冷晨光。", "desc_en": "A horizontal street view: poplar-lined road leading to a heavy ochre archway; pointillist touches on muted tan render the crisp morning of a Hami back street.", "region": "xinjiang", "filename": "1989 A street in Hami City  哈密小街 82.5x49cm.JPG", "image": "images/1989 A street in Hami City  哈密小街 82.5x49cm.JPG", "year_note": ""}, {"id": 18, "title_zh": "打铜壶", "title_en": "Making Copper Pots", "artist": "grandfather", "artist_zh": "刘南生", "artist_en": "Nansheng Liu", "year": "1989", "dimensions": "21″ × 28.5″", "desc_zh": "铺地铜壶林立，两位铜匠在黄棚下敲打铜器。深褐主调与零散反光铜器刻画手工业作坊的氛围。", "desc_en": "Rows of copper pots cover the ground as two craftsmen hammer beneath a yellow awning; deep browns and metallic glints capture an artisan workshop's air.", "region": "xinjiang", "filename": "1989 Making Copper Pots 打铜壶21×28.5in.JPG", "image": "images/1989 Making Copper Pots 打铜壶21×28.5in.JPG", "year_note": ""}, {"id": 19, "title_zh": "对话", "title_en": "Conversation", "artist": "grandfather", "artist_zh": "刘南生", "artist_en": "Nansheng Liu", "year": "1989", "dimensions": "21″ × 29″", "desc_zh": "两位维吾尔男子坐于驴车与白布袋间交谈，一红衣小女孩在旁好奇张望。砖墙背景与白货物构成戏剧性焦点。", "desc_en": "Two Uyghur men converse beside a donkey cart and white sacks while a girl in red looks on; brick wall and white loads create a theatrical contrast.", "region": "xinjiang", "filename": "1989Conversation 21“ x 29”.jpg", "image": "images/1989Conversation 21“ x 29”.jpg", "year_note": ""}, {"id": 20, "title_zh": "理发的老人", "title_en": "Cutting Hair", "artist": "grandfather", "artist_zh": "刘南生", "artist_en": "Nansheng Liu", "year": "1990", "dimensions": "—", "desc_zh": "残墙下，长须维吾尔老人正为坐于椅上的顾客刮脸理发，墙面有维文涂写，挂着工具袋。", "desc_en": "Beneath a weathered wall inscribed with Uyghur script, an aged barber shaves a seated client; razor strops hang on the masonry—a quiet street-corner trade.", "region": "xinjiang", "filename": "1990 Cutting hair理发的老人.jpg", "image": "images/1990 Cutting hair理发的老人.jpg", "year_note": ""}, {"id": 21, "title_zh": "弹都塔尔的老人", "title_en": "Playing a Dutar", "artist": "grandfather", "artist_zh": "刘南生", "artist_en": "Nansheng Liu", "year": "1990", "dimensions": "—", "desc_zh": "长须老者抱都塔尔弹奏，地上散落多件长把乐器，对面妇女与孩童静听。绿荫斑驳，凝固民间音乐的家常时刻。", "desc_en": "A bearded elder strums a dutar with instruments laid out before him, a woman and child listening; dappled green light fixes a domestic moment of folk music.", "region": "xinjiang", "filename": "1990 Playing a Dutar 弹都塔尔的老人.jpg", "image": "images/1990 Playing a Dutar 弹都塔尔的老人.jpg", "year_note": ""}, {"id": 22, "title_zh": "牵羊的维族大妈", "title_en": "An Uyghur Woman with a Sheep", "artist": "grandfather", "artist_zh": "刘南生", "artist_en": "Nansheng Liu", "year": "1991", "dimensions": "53.3 × 72.4 cm", "desc_zh": "维吾尔大妈牵两只黑羊立于门廊内，朝外微笑；门外阳光下驴上行人与孩童剪影成框。门廊明暗构成画面结构。", "desc_en": "An Uyghur woman holding two black sheep smiles from a doorway as a donkey rider and child appear sunlit beyond—the framed threshold structures the composition.", "region": "xinjiang", "filename": "1991 An Uygur Woman with a sheep  牵羊的维族大妈  21×28.5in 53.34x72.39cm.JPG", "image": "images/1991 An Uygur Woman with a sheep  牵羊的维族大妈  21×28.5in 53.34x72.39cm.JPG", "year_note": ""}, {"id": 23, "title_zh": "马奶酒", "title_en": "Making Kumiss", "artist": "grandfather", "artist_zh": "刘南生", "artist_en": "Nansheng Liu", "year": "2000", "dimensions": "45.5 × 61 cm", "desc_zh": "哈萨克妇人于毡房内手持木杵搅打马奶酒，紫衫绿巾在深褐毡内格外醒目。侧光突出工序的专注。", "desc_en": "A Kazakh woman pounds kumiss with a wooden plunger inside a felt yurt; her purple dress and green scarf glow against the deep brown interior under raked light.", "region": "xinjiang", "filename": "2000 Making kumiss  马奶酒 18×24 45.5x61cmold.JPG", "image": "images/2000 Making kumiss  马奶酒 18×24 45.5x61cmold.JPG", "year_note": ""}, {"id": 24, "title_zh": "牧区晨曦", "title_en": "Family of Herdsmen", "artist": "grandfather", "artist_zh": "刘南生", "artist_en": "Nansheng Liu", "year": "2002", "dimensions": "60.96 × 81.28 cm", "desc_zh": "草原晨光中，毡房前妇人提锅烹煮，幼童相随，远处母牛与牛犊。明亮的绿调与晨雾共同构筑牧区清晨。", "desc_en": "At dawn on the grassland, a woman tends a cooking pot near a yurt with child, cow and calf in view; vivid greens and morning mist fill the herders' day.", "region": "xinjiang", "filename": "2002  Family of Herdsmen 牧区晨曦 60.96x81.28cm .jpg", "image": "images/2002  Family of Herdsmen 牧区晨曦 60.96x81.28cm .jpg", "year_note": ""}, {"id": 25, "title_zh": "回娘家", "title_en": "Going Back to Mother's Home", "artist": "grandfather", "artist_zh": "刘南生", "artist_en": "Nansheng Liu", "year": "2009", "dimensions": "45.5 × 61 cm", "desc_zh": "余晖中三人骑马牛沿草坡归途，怀抱婴儿的母亲走在前。整幅以暖橙紫色调勾出回娘家路上的温情节奏。", "desc_en": "In sunset light, riders cross a tall-grass slope toward a cabin; a mother carrying her baby leads—a warm orange-purple palette paces the journey home.", "region": "xinjiang", "filename": "2009 Going back mother's home  回娘家18×24  45.5x61cm old.jpg", "image": "images/2009 Going back mother's home  回娘家18×24  45.5x61cm old.jpg", "year_note": ""}, {"id": 26, "title_zh": "草地上的哈萨克孩子", "title_en": "Kazakh Children on the Grass", "artist": "grandfather", "artist_zh": "刘南生", "artist_en": "Nansheng Liu", "year": "2009", "dimensions": "24″ × 30″", "desc_zh": "草地上五位哈萨克孩童并坐，神态各异，远处羊群悠然。明亮色彩与孩童笑容呈现牧区下一代的活力。", "desc_en": "Five Kazakh children sit on a flowered meadow with sheep grazing beyond; bright colors and varied expressions capture the energy of a new pastoral generation.", "region": "xinjiang", "filename": "2009 Kazakh Chirldren on the grass 草地上的哈萨克孩子24×30.JPG", "image": "images/2009 Kazakh Chirldren on the grass 草地上的哈萨克孩子24×30.JPG", "year_note": ""}, {"id": 27, "title_zh": "哈萨猎人", "title_en": "Kazakh Hunter", "artist": "grandfather", "artist_zh": "刘南生", "artist_en": "Nansheng Liu", "year": "2009", "dimensions": "62 × 77.5 cm", "desc_zh": "骑马猎人臂托金雕，毛皮帽与雪山背景互衬。雪原寒色与人鹰金羽对比，凝固冬日猎手肖像。", "desc_en": "A mounted hunter cradles a golden eagle on his arm against snow-capped peaks; cold snowfield tones offset the bird's golden plumage in a winter portrait.", "region": "xinjiang", "filename": "2009 Kazakh hunter 哈萨猎人24×30.5 62×77.5cm.JPG", "image": "images/2009 Kazakh hunter 哈萨猎人24×30.5 62×77.5cm.JPG", "year_note": ""}, {"id": 28, "title_zh": "舐犊情深", "title_en": "Licking Calf", "artist": "grandfather", "artist_zh": "刘南生", "artist_en": "Nansheng Liu", "year": "2009", "dimensions": "45.5 × 61 cm", "desc_zh": "哈萨克少女牵牛绳，母牛低头爱抚牛犊。乡间小院与远山做背景，题名借母牛舐犊隐喻血缘亲情。", "desc_en": "A Kazakh girl holds the rope as a cow licks her calf; with a yurt and distant slopes behind, the title borrows the bond as metaphor for kin love.", "region": "xinjiang", "filename": "2009 Licking calf  舐犊情深18×24  45.5x61cm old.jpg", "image": "images/2009 Licking calf  舐犊情深18×24  45.5x61cm old.jpg", "year_note": ""}, {"id": 29, "title_zh": "喀什民居", "title_en": "Folk Houses in Kashgar, Xinjiang", "artist": "grandfather", "artist_zh": "刘南生", "artist_en": "Nansheng Liu", "year": "2013", "dimensions": "24″ × 34″", "desc_zh": "高耸的喀什土楼与下方集市共构画面，人群、驴车与摊贩点缀街口。紫蓝天空与暖土色街景对比，呈现古城活力。", "desc_en": "Tall earthen Kashgar houses rise above a bustling market with vendors, carts, and crowds; a violet sky against ochre walls conveys the old town's vitality.", "region": "xinjiang", "filename": "2013 Folk Houses in Kashgar,Xinjiang 喀什民居24”× 34”.JPG", "image": "images/2013 Folk Houses in Kashgar,Xinjiang 喀什民居24”× 34”.JPG", "year_note": ""}, {"id": 30, "title_zh": "赶羊", "title_en": "Herding Sheep", "artist": "grandfather", "artist_zh": "刘南生", "artist_en": "Nansheng Liu", "year": "2013", "dimensions": "24″ × 30″", "desc_zh": "白桦林间，头扎花巾的小女孩持木棍赶两只山羊前行。竖立树干形成竖向构图节奏，色调清新。", "desc_en": "A girl in a floral scarf drives two goats through a silver birch grove with a long stick; the vertical trunks set a rhythmic structure across a cool palette.", "region": "xinjiang", "filename": "2013 Herd Sheeps 赶羊24”× 30.JPG", "image": "images/2013 Herd Sheeps 赶羊24”× 30.JPG", "year_note": ""}, {"id": 31, "title_zh": "牛车", "title_en": "Oxcart", "artist": "grandfather", "artist_zh": "刘南生", "artist_en": "Nansheng Liu", "year": "2013", "dimensions": "24″ × 30″", "desc_zh": "一辆载柴牛车停于黄崖前，赶车人卧地小憩，黄牛安静站立。强烈日光与无人迹的旷野构出短暂歇脚的画面。", "desc_en": "A firewood-laden ox cart rests before tawny cliffs as the driver lies in shade and the ox stands patient; harsh sunlight and empty land mark a brief halt.", "region": "xinjiang", "filename": "2013 Oxcart 牛车24”× 30” .jpg", "image": "images/2013 Oxcart 牛车24”× 30” .jpg", "year_note": ""}, {"id": 32, "title_zh": "农忙托儿所", "title_en": "Seasonal Childcare Group", "artist": "grandfather", "artist_zh": "刘南生", "artist_en": "Nansheng Liu", "year": "2013", "dimensions": "24″ × 30″", "desc_zh": "农忙时节，妇人抱婴、孩童围坐果树下吃食，远处人群劳作。题名记录基层互助的乡村风俗。", "desc_en": "During harvest, a woman holds an infant as children share fruit beneath an apple tree, workers laboring beyond; the title records a rural mutual-care custom.", "region": "xinjiang", "filename": "2013 Seasonal childcare Group 农忙托儿所24”× 30”.JPG", "image": "images/2013 Seasonal childcare Group 农忙托儿所24”× 30”.JPG", "year_note": ""}, {"id": 33, "title_zh": "制陶老艺人", "title_en": "Senior Potters", "artist": "grandfather", "artist_zh": "刘南生", "artist_en": "Nansheng Liu", "year": "2013", "dimensions": "24″ × 30″", "desc_zh": "两位白须制陶老艺人在陶器堆中对坐交谈，背景深褐货架，地面陶罐排列错落。沉稳棕调突出手艺传承的庄重。", "desc_en": "Two bearded master potters sit conversing among stacked jars and rows of pots; deep browns and a hushed palette underscore the gravity of an inherited craft.", "region": "xinjiang", "filename": "2013 Senior potters  制陶老艺人 24”× 30”.JPG", "image": "images/2013 Senior potters  制陶老艺人 24”× 30”.JPG", "year_note": ""}, {"id": 34, "title_zh": "无题", "title_en": "Titleless", "artist": "grandfather", "artist_zh": "刘南生", "artist_en": "Nansheng Liu", "year": "2013", "dimensions": "24″ × 30″", "desc_zh": "一对蜷坐街角的男女流浪者依偎，鸽群从砖墙飞起。无题之中暗含怜悯，强烈剪影与白鸽形成宗教意味。", "desc_en": "A homeless couple huddles at a wall corner as white pigeons take flight; untitled, strong silhouettes and white birds lend a quietly devotional reading.", "region": "xinjiang", "filename": "2013 Titleless 无题 24”× 30”.JPG", "image": "images/2013 Titleless 无题 24”× 30”.JPG", "year_note": ""}, {"id": 35, "title_zh": "削土豆的柯尔克孜妇女", "title_en": "Cutting Potatoes", "artist": "grandfather", "artist_zh": "刘南生", "artist_en": "Nansheng Liu", "year": "2014", "dimensions": "24″ × 30″", "desc_zh": "两位柯尔克孜妇人于土灶旁削土豆，金光自窗洒入。室内陈设与人物姿态构成静谧的厨房生活场景。", "desc_en": "Two Kyrgyz women peel potatoes by a clay stove as golden light pours through the window; furnishings and posture compose a quiet kitchen tableau.", "region": "xinjiang", "filename": "2014 Cutting potatoes 削土豆的 柯尔克孜妇女24x30.JPG", "image": "images/2014 Cutting potatoes 削土豆的 柯尔克孜妇女24x30.JPG", "year_note": ""}, {"id": 36, "title_zh": "牧民转场", "title_en": "Kazakh Herdsmen's Seasonal Migration", "artist": "grandfather", "artist_zh": "刘南生", "artist_en": "Nansheng Liu", "year": "2014", "dimensions": "24″ × 30″", "desc_zh": "蓝湖与雪山前，哈萨克转场队伍——驼载行装、骑马护送。明媚色调延续 1984 年同题作品的迁徙主题。", "desc_en": "A Kazakh migration column—laden camels and mounted herders—moves before a blue lake and snow peaks; bright color revisits the migration theme of his 1984 work.", "region": "xinjiang", "filename": "2014 Kazakh Herdsmen's Seasonal Migration 牧民转场 24”× 30”.JPG", "image": "images/2014 Kazakh Herdsmen's Seasonal Migration 牧民转场 24”× 30”.JPG", "year_note": ""}, {"id": 37, "title_zh": "揉面", "title_en": "Kneading Dough", "artist": "grandfather", "artist_zh": "刘南生", "artist_en": "Nansheng Liu", "year": "2014", "dimensions": "24″ × 30″", "desc_zh": "维吾尔少妇蹲于柴灶前揉面，铜壶与瓷碗散布，灶火金光照亮室内。深褐主调与跃动火光烘托馕饼制作。", "desc_en": "A young Uyghur woman kneads dough by an open hearth as copper kettles glint in firelight; deep browns and leaping flames warm the bread-making scene.", "region": "xinjiang", "filename": "2014 Kneading dough 揉面 24x30.JPG", "image": "images/2014 Kneading dough 揉面 24x30.JPG", "year_note": ""}, {"id": 38, "title_zh": "熬奶疙瘩", "title_en": "Making Dry Cheeses", "artist": "grandfather", "artist_zh": "刘南生", "artist_en": "Nansheng Liu", "year": "2014", "dimensions": "24″ × 30″", "desc_zh": "哈萨克少女捧木盘奶疙瘩立于户外，蓝雾中可见毡房与小牛羊。粉紫衣裙在冷调环境里显得鲜明。", "desc_en": "A Kazakh girl holds a tray of curd cheeses outdoors, yurt and small livestock in misty cool tones; her pink-violet dress glows against the chilled palette.", "region": "xinjiang", "filename": "2014 Making Dry cheeses  熬奶疙瘩 24x30.JPG", "image": "images/2014 Making Dry cheeses  熬奶疙瘩 24x30.JPG", "year_note": ""}, {"id": 39, "title_zh": "庭院琴声", "title_en": "Music in a Yard", "artist": "grandfather", "artist_zh": "刘南生", "artist_en": "Nansheng Liu", "year": "2014", "dimensions": "24″ × 30″", "desc_zh": "葡萄棚下，长须老人弹奏热瓦普，旁有妇人与男孩聆听，桌上茶具与远处家禽点景。暖橙基调营造庭院的诗意时光。", "desc_en": "Beneath a grape arbor, a bearded elder plays a rawap with a woman and boy listening, tea set and a hen nearby; warm ochres steep the courtyard in lyric time.", "region": "xinjiang", "filename": "2014 Music in a Yard 庭院琴声 24x30 .jpg", "image": "images/2014 Music in a Yard 庭院琴声 24x30 .jpg", "year_note": ""}, {"id": 40, "title_zh": "剪羊毛", "title_en": "Shearing", "artist": "grandfather", "artist_zh": "刘南生", "artist_en": "Nansheng Liu", "year": "2014", "dimensions": "24″ × 30″", "desc_zh": "草地上，紫巾妇人专注为白山羊剪毛，其他羊只在旁观望，散落一团羊毛。鲜亮色彩展现牧区午后劳动场景。", "desc_en": "On a meadow, a woman in a purple scarf shears a goat as other animals look on and a tuft of wool lies beside her; bright color renders afternoon herd work.", "region": "xinjiang", "filename": "2014 Shearing 剪羊毛·24x30.JPG", "image": "images/2014 Shearing 剪羊毛·24x30.JPG", "year_note": ""}, {"id": 41, "title_zh": "落日", "title_en": "Sunset", "artist": "grandfather", "artist_zh": "刘南生", "artist_en": "Nansheng Liu", "year": "2014", "dimensions": "24″ × 30″", "desc_zh": "落日逆光下，牧人骑驴驮行李归家，画面以漩涡笔触表现夕阳光晕。明显借鉴梵高式短笔与动势。", "desc_en": "A herder rides home on a donkey under a setting sun rendered in swirling impasto strokes; the touch openly nods to Van Gogh's short, energetic mark-making.", "region": "xinjiang", "filename": "2014 Sunset 落日24x30.jpg", "image": "images/2014 Sunset 落日24x30.jpg", "year_note": ""}, {"id": 42, "title_zh": "小骑手", "title_en": "Young Rider", "artist": "grandfather", "artist_zh": "刘南生", "artist_en": "Nansheng Liu", "year": "2014", "dimensions": "24″ × 30″", "desc_zh": "红巾哈萨克少年立于白马前，远处毡房与马群。少年坚毅神态与白马伫立姿势形成稳定金字塔构图。", "desc_en": "A Kazakh boy in a red headband stands before a white horse with yurts and herd behind; his steady gaze and the horse's pose form a stable pyramidal composition.", "region": "xinjiang", "filename": "2014 Young Rider 小骑手24x30.JPG", "image": "images/2014 Young Rider 小骑手24x30.JPG", "year_note": ""}, {"id": 43, "title_zh": "割冬牧草", "title_en": "Mowing Winter Grazing", "artist": "grandfather", "artist_zh": "刘南生", "artist_en": "Nansheng Liu", "year": "2015", "dimensions": "24″ × 48″", "desc_zh": "横幅作品：四位牧人骑马持镰穿行黄昏草原，剪影与暮色相融。横向构图强化迁徙与节令劳动的史诗感。", "desc_en": "A wide horizontal: four mounted herders with scythes ride across a dusk meadow, silhouettes blending with twilight—the format lends epic weight to seasonal labor.", "region": "xinjiang", "filename": "2015 Mowing Winter Grazing 割冬牧草24”× 48”.JPG", "image": "images/2015 Mowing Winter Grazing 割冬牧草24”× 48”.JPG", "year_note": ""}, {"id": 44, "title_zh": "巴里坤·椿麦子", "title_en": "Pounding Wheats in Barkol, Xinjiang", "artist": "grandfather", "artist_zh": "刘南生", "artist_en": "Nansheng Liu", "year": "2015", "dimensions": "24″ × 30″", "desc_zh": "巴里坤毡房前，四位哈萨克妇女合力杵麦，鸡群环绕，背景天山隐现。明亮色调记录哈萨克秋收风俗。", "desc_en": "Outside Barkol yurts, four Kazakh women pound wheat in mortars surrounded by hens, the Tianshan beyond; bright tones document a Kazakh autumn-harvest custom.", "region": "xinjiang", "filename": "2015 Pounding Wheats in Barkol,Xinjiang 巴里坤  椿麦子24x30.jpg", "image": "images/2015 Pounding Wheats in Barkol,Xinjiang 巴里坤  椿麦子24x30.jpg", "year_note": ""}, {"id": 45, "title_zh": "穿藍裙的哈薩克姑娘", "title_en": "A Kazakh Girl in a Blue Skirt", "artist": "grandfather", "artist_zh": "刘南生", "artist_en": "Nansheng Liu", "year": "1981(?", "dimensions": "—", "desc_zh": "哈萨克少女着蓝裙、佩花披肩与皮帽，端坐白布前；松散笔触保留写生痕迹，色调清亮。", "desc_en": "A Kazakh girl in a blue dress, embroidered vest, and fur cap sits before white drapery; loose strokes preserve the freshness of plein-air portraiture.", "region": "xinjiang", "filename": "A Kazakh Girl in a blue skirt穿藍裙的哈薩克姑娘.JPG", "image": "images/A Kazakh Girl in a blue skirt穿藍裙的哈薩克姑娘.JPG", "year_note": "(estimated)"}, {"id": 46, "title_zh": "肯尼亚少女", "title_en": "Kenyan Girl", "artist": "grandfather", "artist_zh": "刘南生", "artist_en": "Nansheng Liu", "year": "1992", "dimensions": "18″ × 24″", "desc_zh": "肯尼亚少女怀抱婴儿立于白色教堂与茅草屋之间，热带阳光通过棕榈洒下。微笑温和，构图融人于景。", "desc_en": "A young Kenyan woman holds a baby between a whitewashed church and thatched huts under tropical sun and palm shade; her gentle smile integrates figure and place.", "region": "africa", "filename": "1992 Kenyan Girl 肯尼亚少女18×24.JPG", "image": "images/1992 Kenyan Girl 肯尼亚少女18×24.JPG", "year_note": ""}, {"id": 47, "title_zh": "本地艺人", "title_en": "A Local Artist", "artist": "grandfather", "artist_zh": "刘南生", "artist_en": "Nansheng Liu", "year": "1995", "dimensions": "—", "desc_zh": "紫红花树下，非洲艺人坐地雕刻木偶，地上排列已完成的彩色木雕。鲜艳粉调与木偶剪影构成色彩对比。", "desc_en": "Beneath crimson blossoms, an African carver sits cross-legged finishing painted wooden figurines arrayed on the ground; magenta hues offset the dark carvings.", "region": "africa", "filename": "1995 A Local Artist.jpg", "image": "images/1995 A Local Artist.jpg", "year_note": ""}, {"id": 48, "title_zh": "篝火", "title_en": "Camp Fire", "artist": "grandfather", "artist_zh": "刘南生", "artist_en": "Nansheng Liu", "year": "2016", "dimensions": "24″ × 30″", "desc_zh": "夜色椰影下，村民围篝火击鼓而舞，火光自下方照亮人体动作。深蓝夜色与橙红火光构成强烈光影。", "desc_en": "Villagers drum and dance around a night fire under palm trees as flames light the figures from below; deep blue night and orange flame create charged chiaroscuro.", "region": "africa", "filename": "2016 Camp Fire 24x30.jpg", "image": "images/2016 Camp Fire 24x30.jpg", "year_note": ""}, {"id": 49, "title_zh": "肯尼亚码头", "title_en": "A Wharf in Kenya", "artist": "grandfather", "artist_zh": "刘南生", "artist_en": "Nansheng Liu", "year": "2017", "dimensions": "18″ × 24″", "desc_zh": "肯尼亚港口街景：远处帆船入港，妇人与孩童于沙地间走动，黄色木楼上空海鸥盘旋。明朗色调显热带港埠生活。", "desc_en": "A Kenyan wharfside: dhows in the bay, women and children moving across the sand, gulls above a yellow wooden building—a bright take on coastal port life.", "region": "africa", "filename": "2017 A Wharf in Kenya 18x24.jpg", "image": "images/2017 A Wharf in Kenya 18x24.jpg", "year_note": ""}, {"id": 50, "title_zh": "两位少女", "title_en": "Two Girls", "artist": "grandfather", "artist_zh": "刘南生", "artist_en": "Nansheng Liu", "year": "2015", "dimensions": "24″ × 30″", "desc_zh": "两位非洲少女头顶陶罐立于赭黄背景前，左侧持笑、右侧叉腰，胸饰与腰布色泽鲜艳，画面似平面装饰画。", "desc_en": "Two African girls carry pots on their heads against an ochre ground, one smiling, one with hand on hip; vivid beadwork and wraps push toward decorative flatness.", "region": "africa", "filename": "2015 Two Girls 24x30.jpg", "image": "images/2015 Two Girls 24x30.jpg", "year_note": ""}, {"id": 51, "title_zh": "集市", "title_en": "Fair", "artist": "grandfather", "artist_zh": "刘南生", "artist_en": "Nansheng Liu", "year": "2016", "dimensions": "24″ × 30″", "desc_zh": "茅顶集市中，妇人背婴交易蔬果，孩童散布于摊位之间。暖黄主调与茅顶笔触组合成喧嚷又紧凑的市集印象。", "desc_en": "Under thatched stalls, women trade produce with babies slung on their backs as children weave between; warm yellows and dabbed thatch yield a busy fair.", "region": "africa", "filename": "2016 Fair 24x30.jpg", "image": "images/2016 Fair 24x30.jpg", "year_note": ""}, {"id": 52, "title_zh": "木雕艺人", "title_en": "Wood Sculptors", "artist": "grandfather", "artist_zh": "刘南生", "artist_en": "Nansheng Liu", "year": "2016", "dimensions": "—", "desc_zh": "粉土地面上两位木雕匠相对而坐凿刻木偶，周围摆满雕件半成品。粉红与赭色平面化处理略带壁画感。", "desc_en": "On pinkish earth, two woodcarvers sit chiseling figurines as finished and half-finished pieces line the floor; pinks and ochres flatten space into mural-like planes.", "region": "africa", "filename": "2016 Wood Sculptors.jpg", "image": "images/2016 Wood Sculptors.jpg", "year_note": ""}, {"id": 53, "title_zh": "当地人", "title_en": "Local Folks", "artist": "grandfather", "artist_zh": "刘南生", "artist_en": "Nansheng Liu", "year": "2017", "dimensions": "18″ × 24″", "desc_zh": "数位非洲妇女披彩纱袍站于黄底背景中，前景小女孩注视观者。黄调统一画面，五彩头巾与披风成节奏点。", "desc_en": "Several African women in colorful wraps stand against a saffron ground while a girl in front meets the viewer's eye; unified yellow and bright scarves set a beat.", "region": "africa", "filename": "2017 Local Folks 18x24.jpg", "image": "images/2017 Local Folks 18x24.jpg", "year_note": ""}, {"id": 54, "title_zh": "海边", "title_en": "Sea Side", "artist": "grandfather", "artist_zh": "刘南生", "artist_en": "Nansheng Liu", "year": "2017", "dimensions": "—", "desc_zh": "沙岸前排立四位妇女与一坐立老者，远处帆船成排。背婴妇女与红巾妇女构成色彩焦点。", "desc_en": "Four women and a seated elder stand on a sand quay before rows of dhows; the woman with a baby on her back and another in a red shawl anchor the color.", "region": "africa", "filename": "2017 Sea Side.jpg", "image": "images/2017 Sea Side.jpg", "year_note": ""}, {"id": 55, "title_zh": "汲水", "title_en": "Taking Water", "artist": "grandfather", "artist_zh": "刘南生", "artist_en": "Nansheng Liu", "year": "2017", "dimensions": "18″ × 24″", "desc_zh": "头顶陶罐的非洲妇女立于古堡前，远处井边人物背景化处理。橘色裹胸与建筑暖色形成强烈视觉张力。", "desc_en": "A woman balances a water pot on her head before an old fort while figures at the well recede behind her; her orange wrap charges the warm-toned scene.", "region": "africa", "filename": "2017 Taking water 18x24.jpg", "image": "images/2017 Taking water 18x24.jpg", "year_note": ""}, {"id": 56, "title_zh": "海边人家", "title_en": "Living on the Sea Side", "artist": "grandfather", "artist_zh": "刘南生", "artist_en": "Nansheng Liu", "year": "2017", "dimensions": "18″ × 24″", "desc_zh": "夕照下海湾村落：白屋红顶倒映水中，远岸停泊数艘渔船。暖橙基调与水面波纹捕捉热带海滨的黄昏宁静。", "desc_en": "A bayside village at sunset: red-roofed white houses reflect in calm water, fishing boats lined along the far shore; warm orange tones still the tropical evening.", "region": "africa", "filename": "2017 living on the sea side 18x24.jpg", "image": "images/2017 living on the sea side 18x24.jpg", "year_note": ""}, {"id": 57, "title_zh": "返家", "title_en": "Coming Home", "artist": "grandfather", "artist_zh": "刘南生", "artist_en": "Nansheng Liu", "year": "1995", "dimensions": "24″ × 30″", "desc_zh": "朱红崖壁下小海湾，三位渔民推船登陆，海鸥掠过浪头，岩岸渔船泊于沙滩。古典海景式光影显沿岸生活。", "desc_en": "At a cove beneath red cliffs, three fishermen push a boat ashore as gulls skim the surf; classical seascape light frames everyday coastal labor.", "region": "americas", "filename": "1995 Coming Home  返家  24×30.JPG", "image": "images/1995 Coming Home  返家  24×30.JPG", "year_note": ""}, {"id": 58, "title_zh": "烤玉米", "title_en": "Grilling Corns", "artist": "grandfather", "artist_zh": "刘南生", "artist_en": "Nansheng Liu", "year": "1996", "dimensions": "24″ × 30″", "desc_zh": "院前烤玉米摊：年轻女子俯身翻烤，玉米成排陈列；身后白狗与小男孩成趣。日常美式街头摊位的写实记录。", "desc_en": "At a sidewalk grill, a young woman turns ears of corn arrayed on iron; a white dog and small boy linger behind in a documentary glimpse of a roadside stand.", "region": "americas", "filename": "1996 Grilling Corns烤玉米24x30 .JPG", "image": "images/1996 Grilling Corns烤玉米24x30 .JPG", "year_note": ""}, {"id": 59, "title_zh": "墨西哥牛仔", "title_en": "Mexican Cowboys", "artist": "grandfather", "artist_zh": "刘南生", "artist_en": "Nansheng Liu", "year": "1996", "dimensions": "24″ × 30″", "desc_zh": "山口加油站旁，戴宽边帽的牛仔骑马，与友人在 ARCO 加油标志下交谈。绿色群山与赭色土地写出乡野墨西哥风貌。", "desc_en": "At a roadside gas station beneath an ARCO sign, sombreroed vaqueros pause—horses, pickup, mountains beyond; green hills and ochre dust set rural Mexico's tempo.", "region": "americas", "filename": "1996 Mexican Cowboys  墨西哥牛仔   24×30.JPG", "image": "images/1996 Mexican Cowboys  墨西哥牛仔   24×30.JPG", "year_note": ""}, {"id": 60, "title_zh": "墨西哥渔民", "title_en": "Mexican Fishermen", "artist": "grandfather", "artist_zh": "刘南生", "artist_en": "Nansheng Liu", "year": "1998", "dimensions": "24″ × 30″", "desc_zh": "港边卡车旁，三位渔民围拢清点鱼获，背景灰云海平面。深暗色调与新鲜鱼身反光突出讨价还价的瞬间。", "desc_en": "By a pickup at the harbor, three fishermen tally the morning catch under leaden clouds; dark tones and the glint of fresh fish freeze a moment of bargaining.", "region": "americas", "filename": "1998 Mexican Fishermen  墨西哥渔民24×30.JPG", "image": "images/1998 Mexican Fishermen  墨西哥渔民24×30.JPG", "year_note": ""}, {"id": 61, "title_zh": "印度食品", "title_en": "Indian Foods", "artist": "grandfather", "artist_zh": "刘南生", "artist_en": "Nansheng Liu", "year": "2001", "dimensions": "20″ × 24″", "desc_zh": "印度小食摊前，几位披纱女性背向观者驻足选购，戴红头巾的摊主笑迎。背影构图突出市集匿名性。", "desc_en": "At an Indian food stall, sari-clad women stand with their backs to us as a red-turbaned vendor smiles; the rear-view composition foregrounds market anonymity.", "region": "americas", "filename": "2001 Indian foods 印度食品 20×24.JPG", "image": "images/2001 Indian foods 印度食品 20×24.JPG", "year_note": ""}, {"id": 62, "title_zh": "卖墨西哥煎饼的女孩", "title_en": "Mexican Girl", "artist": "grandfather", "artist_zh": "刘南生", "artist_en": "Nansheng Liu", "year": "2004", "dimensions": "18″ × 22″", "desc_zh": "红辣椒串与日月面具装点的小摊前，墨西哥少女露肩白衫笑迎顾客。装饰元素与少女微笑共构节日般氛围。", "desc_en": "A Mexican girl in an off-shoulder blouse greets customers at a stall hung with chili ristras and a sun mask; folk décor and her smile lift the scene toward fiesta.", "region": "americas", "filename": "2004 Mexico girl 卖墨西哥煎饼的女孩18×22.JPG", "image": "images/2004 Mexico girl 卖墨西哥煎饼的女孩18×22.JPG", "year_note": ""}, {"id": 63, "title_zh": "骑小马的孩子", "title_en": "Kids on Horseback", "artist": "grandfather", "artist_zh": "刘南生", "artist_en": "Nansheng Liu", "year": "2008", "dimensions": "24″ × 36″", "desc_zh": "牧场骑马游乐项目：戴白帽女童牵小马，其他孩童坐于马背，南瓜装饰摆于栏前。秋日嘉年华的家庭场景。", "desc_en": "A pony-ride attraction: a white-hatted girl leads a small horse while children sit mounted, pumpkins lining the rail—an autumnal family-day-out tableau.", "region": "americas", "filename": "2008 Kids on horseback 骑小马的孩子24×36.JPG", "image": "images/2008 Kids on horseback 骑小马的孩子24×36.JPG", "year_note": ""}, {"id": 64, "title_zh": "拉丁风情嘉年华", "title_en": "Latino Carnival in San Francisco", "artist": "grandfather", "artist_zh": "刘南生", "artist_en": "Nansheng Liu", "year": "2010", "dimensions": "24″ × 30″", "desc_zh": "旧金山拉丁嘉年华上，蓝紫与橙红羽饰的桑巴舞者牵手前行，前景气球散落。鲜艳羽饰与节庆动势构成戏剧画面。", "desc_en": "Samba dancers in blue-violet and orange plumage cross the street arm in arm at San Francisco's Carnaval, balloons in the foreground—a flamboyant procession.", "region": "americas", "filename": "2010  Latino Carnival in San Francisco 拉丁风情嘉年华24×30.jpg", "image": "images/2010  Latino Carnival in San Francisco 拉丁风情嘉年华24×30.jpg", "year_note": ""}, {"id": 65, "title_zh": "龙舟", "title_en": "Dragon-boat Race (Zhuang, Guilin)", "artist": "grandfather", "artist_zh": "刘南生", "artist_en": "Nansheng Liu", "year": "1986", "dimensions": "205.5 × 66.5 cm", "desc_zh": "长卷式构图：壮族龙舟竞渡，水雾翻腾间桨手齐发，鼓手立中击鼓，岸边游船零星可见。粗放笔触富纪念碑感。", "desc_en": "A long horizontal: Zhuang dragon boats race through mist with rowers in unison and a drummer at the center, spectator boats beyond—broad strokes give monumental scale.", "region": "southwest", "filename": "1986 Dragon-boat Race (Zhuang ethnic Group in Guilin)龙舟 205.5x66.5.jpg", "image": "images/1986 Dragon-boat Race (Zhuang ethnic Group in Guilin)龙舟 205.5x66.5.jpg", "year_note": ""}, {"id": 66, "title_zh": "老街·宗祠", "title_en": "Old Street · Ancestral Temple, Hunan", "artist": "grandfather", "artist_zh": "刘南生", "artist_en": "Nansheng Liu", "year": "2006", "dimensions": "24″ × 30″", "desc_zh": "湘西老街尽头矗立重檐古戏台，孩童与妇人于台前空地嬉戏；暖黄屋面与冬日草地构出小镇宁谧。", "desc_en": "A double-eaved opera-stage temple rises at the end of a Hunan lane as women and children play on the grass below; ochre roofs and dry winter ground hush the town.", "region": "southwest", "filename": "2006  Old Street•Ancestral temple, Hunan 老街•宗祠24×30 .JPG", "image": "images/2006  Old Street•Ancestral temple, Hunan 老街•宗祠24×30 .JPG", "year_note": ""}, {"id": 67, "title_zh": "老街·过年·庙桥", "title_en": "Old Street · The Temple Bridge, Hunan", "artist": "grandfather", "artist_zh": "刘南生", "artist_en": "Nansheng Liu", "year": "2006", "dimensions": "22″ × 28″", "desc_zh": "廊桥横跨溪水，桥檐挂彩灯，桥头行人簇拥过年市集，水面倒影粼粼。冷色调写春节湘西小镇的节庆烟火。", "desc_en": "A covered bridge spans a creek with lanterns under its eaves and New-Year stalls at its head, reflections quivering below; cool tones host the festival.", "region": "southwest", "filename": "2006  Old Street•TheTemple bridge, Hunan 老街•过年•庙桥 22×28 .jpg", "image": "images/2006  Old Street•TheTemple bridge, Hunan 老街•过年•庙桥 22×28 .jpg", "year_note": ""}, {"id": 68, "title_zh": "古城·进香", "title_en": "Old City · Appease the Gods, Hunan", "artist": "grandfather", "artist_zh": "刘南生", "artist_en": "Nansheng Liu", "year": "2006", "dimensions": "24″ × 30″", "desc_zh": "湘西古城内进香场景：信众执香伏案，烛火排列成线，墙上\"佛\"字隐现。烟雾与暖红基调凸显庙堂仪式。", "desc_en": "Inside an old Hunan town, worshippers light incense at a low altar where rows of candle flames flicker, \"Buddha\" characters on the wall—ritual hush in smoke.", "region": "southwest", "filename": "2006 Old City-Appease Gods, Hunan  古城• 进香24×30  .JPG", "image": "images/2006 Old City-Appease Gods, Hunan  古城• 进香24×30  .JPG", "year_note": ""}, {"id": 69, "title_zh": "喂（瑶族）", "title_en": "Feeding (Yao Ethnic Group)", "artist": "grandfather", "artist_zh": "刘南生", "artist_en": "Nansheng Liu", "year": "2007", "dimensions": "45.5 × 61 cm", "desc_zh": "瑶族火塘前，母亲喂幼子粥饭，柴火青烟升腾。室内深褐与红衣对比突出温馨家庭仪式。", "desc_en": "At a Yao hearth, a mother feeds her toddler from a bowl as smoke rises from kindling; deep browns and her red robe frame an intimate domestic ritual.", "region": "southwest", "filename": "2007 Feeding（Yao Ethnic Group） 喂18×24 45.5x61cm .JPG", "image": "images/2007 Feeding（Yao Ethnic Group） 喂18×24 45.5x61cm .JPG", "year_note": ""}, {"id": 70, "title_zh": "炒油茶（瑶族）", "title_en": "Frying Oiled Tea (Yao Ethnic Group)", "artist": "grandfather", "artist_zh": "刘南生", "artist_en": "Nansheng Liu", "year": "2007", "dimensions": "45.5 × 61 cm", "desc_zh": "瑶族妇人于木屋内炒油茶，火塘旁红衣小童伸手取暖。锅中蒸汽与火苗交织出地方饮食习俗的纪录。", "desc_en": "A Yao woman fries oiled tea in a smoky kitchen as her red-clad grandchild reaches toward the flames—steam and ember record a local culinary custom.", "region": "southwest", "filename": "2007 Frying Oiled Tea （Yao Ethnic Group炒油茶18×24 45.5x61cm .jpg", "image": "images/2007 Frying Oiled Tea （Yao Ethnic Group炒油茶18×24 45.5x61cm .jpg", "year_note": ""}, {"id": 71, "title_zh": "晾渔网（壮族·桂林）", "title_en": "Drying the Fishing Nets (Zhuang, Guilin)", "artist": "grandfather", "artist_zh": "刘南生", "artist_en": "Nansheng Liu", "year": "2017", "dimensions": "—", "desc_zh": "桂林漓江边，壮族妇女在木架间晾晒渔网，孩童坐地玩耍，远岸为青翠山影。柔光绿调表现江畔劳作的悠然。", "desc_en": "On the Lijiang's bank, a Zhuang woman hangs fishing nets on bamboo frames as her child plays nearby—soft green light bathes the riverside labor.", "region": "southwest", "filename": "2017 Drying the Fishing Nets (Zhuang ethnic Group in Guilin).JPG", "image": "images/2017 Drying the Fishing Nets (Zhuang ethnic Group in Guilin).JPG", "year_note": ""}, {"id": 72, "title_zh": "造渔船（壮族·桂林）", "title_en": "Making a Fishing Boat (Zhuang, Guilin)", "artist": "grandfather", "artist_zh": "刘南生", "artist_en": "Nansheng Liu", "year": "2017", "dimensions": "—", "desc_zh": "喀斯特山下，壮族匠人正修造渔船，旁有架晒纱、煮食妇人。山影与船体共构构图层次。", "desc_en": "Beneath karst peaks, Zhuang craftsmen repair a fishing boat while nets dry and a woman cooks beside it; mountains and hull layer the composition.", "region": "southwest", "filename": "2017 Making fishing boat (Zhuang ethnic Group in Guilin).JPG", "image": "images/2017 Making fishing boat (Zhuang ethnic Group in Guilin).JPG", "year_note": ""}, {"id": 73, "title_zh": "苗族女孩", "title_en": "A Hmong Girl", "artist": "grandfather", "artist_zh": "刘南生", "artist_en": "Nansheng Liu", "year": "—", "dimensions": "—", "desc_zh": "苗族少女头戴流苏银饰头巾，发梢系彩穗。半身肖像，背景为深褐色，侧重纺织与首饰的细节质感。", "desc_en": "A Hmong girl wears a fringed silver-and-pink headdress with tassels; a half-length portrait against deep brown emphasizes textile and ornament texture.", "region": "southwest", "filename": "A Hmong Girl 苗族女孩 .jpg", "image": "images/A Hmong Girl 苗族女孩 .jpg", "year_note": ""}, {"id": 74, "title_zh": "维吾尔少女", "title_en": "An Uyghur Girl", "artist": "grandfather", "artist_zh": "刘南生", "artist_en": "Nansheng Liu", "year": "1980", "dimensions": "—", "desc_zh": "葡萄藤架下，维吾尔少女着白衫紫裙坐于树荫间，神情自然。绿色葡萄藤构出斑驳光影，气氛清新。", "desc_en": "A Uyghur girl in white blouse and dark purple skirt sits in a grape arbor's dappled shade; the trellis weaves green light around an unaffected pose.", "region": "xinjiang", "filename": "1980 An Uyghur Girl.JPG", "image": "images/1980 An Uyghur Girl.JPG", "year_note": ""}, {"id": 75, "title_zh": "印度少女", "title_en": "An Indian Girl", "artist": "grandfather", "artist_zh": "刘南生", "artist_en": "Nansheng Liu", "year": "1981", "dimensions": "79.3 × 61.6 cm", "desc_zh": "印度少女红衫黄裙抱白瓷壶立于淡紫背景前。明亮的红黄对比与柔背景突出人物姿态。", "desc_en": "An Indian woman in a red blouse and yellow skirt cradles a white jar before a lavender backdrop; saturated red-yellow against soft violet centers the figure.", "region": "xinjiang", "filename": "1981 An Indian Girl   79.3x61.6cm.JPG", "image": "images/1981 An Indian Girl   79.3x61.6cm.JPG", "year_note": ""}, {"id": 76, "title_zh": "维吾尔青年", "title_en": "An Uyghur Young Man", "artist": "grandfather", "artist_zh": "刘南生", "artist_en": "Nansheng Liu", "year": "1984", "dimensions": "64 × 49.5 cm", "desc_zh": "维吾尔青年身着蓝色绣花外衣，手抱胸前侧目而望。坚实笔触与素色背景突出人物自信神态。", "desc_en": "A Uyghur youth in an embroidered blue tunic crosses his arms and gazes aside; firm brushwork and a plain ground concentrate attention on his confident bearing.", "region": "xinjiang", "filename": "1984 An Uyghur Young Man 64x49.5cm.jpg", "image": "images/1984 An Uyghur Young Man 64x49.5cm.jpg", "year_note": ""}, {"id": 77, "title_zh": "爷孙俩", "title_en": "An Uyghur Man and His Grandson", "artist": "grandfather", "artist_zh": "刘南生", "artist_en": "Nansheng Liu", "year": "2012", "dimensions": "24″ × 30″", "desc_zh": "大丽花丛中，戴白帽的维吾尔老人坐抱孙儿，孙儿手执红花。柔粉花海与人物深褐衣袍对比生动。", "desc_en": "Among dahlias, a white-capped Uyghur grandfather holds his grandson, who clutches a red bloom; the soft floral mass plays against their deep brown robes.", "region": "xinjiang", "filename": "2012 An Uyghur Man and his Grandson 爷孙俩24× 30.jpg", "image": "images/2012 An Uyghur Man and his Grandson 爷孙俩24× 30.jpg", "year_note": ""}, {"id": 78, "title_zh": "杏花古井", "title_en": "Prunus Old Well", "artist": "grandfather", "artist_zh": "刘南生", "artist_en": "Nansheng Liu", "year": "2012", "dimensions": "24″ × 30″", "desc_zh": "杏花盛开的院落古井旁，两位维吾尔妇人协力提水，公鸡踱步石地。明亮春色记录新疆农家清晨劳作。", "desc_en": "Two Uyghur women haul water at an old well under blossoming apricot, a rooster strutting on the flagstones; bright spring light records a morning rural chore.", "region": "xinjiang", "filename": "2012 Prunus old well 杏花古井24x30.jpg", "image": "images/2012 Prunus old well 杏花古井24x30.jpg", "year_note": ""}, {"id": 79, "title_zh": "牧牛", "title_en": "Grazing", "artist": "grandfather", "artist_zh": "刘南生", "artist_en": "Nansheng Liu", "year": "2013", "dimensions": "24″ × 30″", "desc_zh": "头戴花毡帽的哈萨克老人持杖站立，背后黄牛悠然吃草饮水，远处白桦与远山。沉静半身肖像式构图。", "desc_en": "A bearded Kazakh elder in a banded hat stands with a staff as cattle graze and drink behind him beneath silver birches—a contemplative half-length composition.", "region": "xinjiang", "filename": "2013 Grazing 牧牛 24x30.JPG", "image": "images/2013 Grazing 牧牛 24x30.JPG", "year_note": ""}, {"id": 80, "title_zh": "摘杏子", "title_en": "Picking Apricots", "artist": "grandfather", "artist_zh": "刘南生", "artist_en": "Nansheng Liu", "year": "2013", "dimensions": "24″ × 30″", "desc_zh": "杏树上少年攀枝采摘，两男孩仰头观看，少女举手接果。鲜亮绿调与红杏点缀勾出夏日收获场景。", "desc_en": "A boy climbs the tree as others below reach up or watch, a girl catching the falling fruit; vibrant greens dotted with red apricots stage a summer harvest.", "region": "xinjiang", "filename": "2013 Picking apricot 摘杏子24”× 30”.JPG", "image": "images/2013 Picking apricot 摘杏子24”× 30”.JPG", "year_note": ""}, {"id": 81, "title_zh": "休憩", "title_en": "Taking a Break", "artist": "grandfather", "artist_zh": "刘南生", "artist_en": "Nansheng Liu", "year": "2014", "dimensions": "—", "desc_zh": "维吾尔少妇坐于树下绣花，紫花野草遍地，远处羊群与劳作者隐现。安详春日劳动间隙。", "desc_en": "A young Uyghur woman embroiders under a tree amid wild purple blossoms, sheep and laborers visible beyond—a peaceful spring interlude between tasks.", "region": "xinjiang", "filename": "2014 Taking a break.JPG", "image": "images/2014 Taking a break.JPG", "year_note": ""}, {"id": 82, "title_zh": "喂马", "title_en": "Feeding Horses", "artist": "grandfather", "artist_zh": "刘南生", "artist_en": "Nansheng Liu", "year": "2018", "dimensions": "—", "desc_zh": "维吾尔老人抱青草喂两匹枣红马，茅棚下鸽群飞舞。粗犷笔触与暖光记录牧区劳作的质朴时刻。", "desc_en": "An elderly Uyghur feeds armfuls of grass to two chestnut horses under a thatched shelter as pigeons stir nearby—rough strokes and warm light fix a humble chore.", "region": "xinjiang", "filename": "2018 Feeding Horses.JPG", "image": "images/2018 Feeding Horses.JPG", "year_note": ""}, {"id": 83, "title_zh": "盖新房", "title_en": "Making the New House", "artist": "grandfather", "artist_zh": "刘南生", "artist_en": "Nansheng Liu", "year": "2018", "dimensions": "18″ × 24″", "desc_zh": "雪地中三位哈萨克男子合力凿木建屋，旁置木材与工具，远处木屋与马匹。冷蓝雪色与人物动作形成对比节奏。", "desc_en": "On snow, three Kazakh men work timbers for a new house with cabin and horses behind them; cold blue snow and rhythmic effort frame winter construction.", "region": "xinjiang", "filename": "2018 Making the New House18x24.jpg", "image": "images/2018 Making the New House18x24.jpg", "year_note": ""}, {"id": 84, "title_zh": "清晨", "title_en": "Morning", "artist": "grandfather", "artist_zh": "刘南生", "artist_en": "Nansheng Liu", "year": "2018", "dimensions": "18″ × 24″", "desc_zh": "清晨村落中，妇人挑水返家，孩童在井边戏耍，山羊与犬散布。淡赭统调显示干旱土地与晨光中的乡村秩序。", "desc_en": "At dawn, women carry water yokes through a village as children play around the well, goats and dogs about; pale ochre conveys arid land in orderly morning.", "region": "xinjiang", "filename": "2018 Morning 18x24.jpg", "image": "images/2018 Morning 18x24.jpg", "year_note": ""}, {"id": 85, "title_zh": "车上的人家", "title_en": "The Family on the Cart", "artist": "grandfather", "artist_zh": "刘南生", "artist_en": "Nansheng Liu", "year": "2018", "dimensions": "18″ × 24″", "desc_zh": "数匹马拉满载货物的木轮大车，车顶坐妇人与孩童，沿胡杨林路徐行。横向构图传达旅途持续与等待。", "desc_en": "A heavily loaded wagon hauled by horses moves down a poplar-lined road with a woman and child seated on top; the horizontal stretches travel into duration.", "region": "xinjiang", "filename": "2018 The Family on the Cart18x24.jpg", "image": "images/2018 The Family on the Cart18x24.jpg", "year_note": ""}, {"id": 86, "title_zh": "维族人家", "title_en": "Uyghur Folks", "artist": "grandfather", "artist_zh": "刘南生", "artist_en": "Nansheng Liu", "year": "2018", "dimensions": "—", "desc_zh": "树荫下街市一隅：人群聚于木桥旁，骑驴老人入画，远处黄屋村景。点画笔触在繁密人物中形成跳动节奏。", "desc_en": "A shaded bazaar corner where villagers gather by a footbridge as a donkey-riding elder enters frame, yellow houses beyond; pointillist touches buoy the crowd.", "region": "xinjiang", "filename": "2018 Uyghur Folks.JPG", "image": "images/2018 Uyghur Folks.JPG", "year_note": ""}, {"id": 87, "title_zh": "叼羊", "title_en": "Buzkashi", "artist": "grandfather", "artist_zh": "刘南生", "artist_en": "Nansheng Liu", "year": "2021", "dimensions": "—", "desc_zh": "草原上叼羊比赛：远处骑手争夺，近处族人观看议论，毡房与羊牛点景。明绿草场与多色人群烘托节庆动势。", "desc_en": "Riders contest the goat-carcass in buzkashi on a green steppe while villagers watch and converse near a yurt; meadow and varied costumes amplify festal motion.", "region": "xinjiang", "filename": "2021 Buzkashi.JPG", "image": "images/2021 Buzkashi.JPG", "year_note": ""}]
+;
+
+const REGION_LABELS = {
+  xinjiang: {zh:'新疆',en:'Xinjiang'},
+  africa: {zh:'非洲',en:'Africa'},
+  southwest: {zh:'西南中国',en:'SW China'},
+  americas: {zh:'美洲',en:'Americas'},
+  tibet: {zh:'西藏',en:'Tibet'},
+};
+
+let lang='en', artistF='all', regionF='all', searchQ='', sortBy='id';
+let filtered=[...paintings], lbIdx=-1;
+let shortlist=new Set(JSON.parse(localStorage.getItem('sl_ids')||'[]'));
+
+function t(p,f){return lang==='en'?(p[f+'_en']||p[f+'_zh']||''):(p[f+'_zh']||'');}
+function regionLabel(r){return REGION_LABELS[r]?.[lang]||r;}
+
+function setLang(l){
+  lang=l;
+  document.querySelectorAll('.lang-toggle button').forEach(b=>b.classList.toggle('active',(l==='zh'&&b.textContent==='中文')||(l==='en'&&b.textContent==='EN')));
+  document.querySelectorAll('.i18n').forEach(el=>{const v=el.getAttribute('data-'+l);if(v)el.textContent=v;});
+  document.querySelectorAll('#artistFilter button').forEach(b=>{const v=b.getAttribute('data-'+l);if(v)b.textContent=v;});
+  document.querySelectorAll('#regionFilter button').forEach(b=>{const v=b.getAttribute('data-'+l);if(v)b.textContent=v;});
+  document.getElementById('searchInput').placeholder=l==='en'?'Search title or description…':'搜索标题或描述…';
+  document.querySelectorAll('#sortSelect option').forEach(o=>{const v=o.getAttribute('data-'+l);if(v)o.textContent=v;});
+  updateCounts();render();
+  if(lbIdx>=0)renderLB(lbIdx);
+  renderSL();
+}
+
+function updateCounts(){
+  const gc=paintings.filter(p=>p.artist==='grandfather').length;
+  const fc=paintings.filter(p=>p.artist==='father').length;
+  const g=document.getElementById('countGrandfather');
+  const f=document.getElementById('countFather');
+  if(g)g.textContent=lang==='en'?`${gc} works in this catalog`:`本目录收录 ${gc} 幅作品`;
+  if(f)f.textContent=lang==='en'?`${fc} works in this catalog`:`本目录收录 ${fc} 幅作品`;
+}
+
+function applyFilters(){
+  filtered=paintings.filter(p=>{
+    if(artistF!=='all'&&p.artist!==artistF)return false;
+    if(regionF!=='all'&&p.region!==regionF)return false;
+    if(searchQ){
+      const q=searchQ.toLowerCase();
+      return (p.title_zh+p.title_en+p.desc_zh+p.desc_en+p.artist_zh+p.artist_en).toLowerCase().includes(q);
+    }
+    return true;
+  });
+  if(sortBy==='year-asc')filtered.sort((a,b)=>parseYear(a.year)-parseYear(b.year));
+  else if(sortBy==='year-desc')filtered.sort((a,b)=>parseYear(b.year)-parseYear(a.year));
+}
+
+function parseYear(y){const n=parseInt(y);return isNaN(n)?9999:n;}
+
+function render(){
+  applyFilters();
+  const info=document.getElementById('resultInfo');
+  info.textContent=lang==='en'?`${filtered.length} of ${paintings.length} works`:`共 ${paintings.length} 幅，显示 ${filtered.length} 幅`;
+  const g=document.getElementById('gallery');g.innerHTML='';
+  filtered.forEach((p,i)=>{
+    const c=document.createElement('div');
+    c.className='card'+(shortlist.has(p.id)?' selected':'');
+    c.style.animationDelay=`${Math.min(i*0.03,0.6)}s`;
+    const rl=regionLabel(p.region);
+    c.innerHTML=`
+      <div class="thumb">
+        <span class="num">No.${String(p.id).padStart(3,'0')}</span>
+        <button class="sel-btn ${shortlist.has(p.id)?'on':''}" onclick="event.stopPropagation();toggleSL(${p.id})" title="${lang==='en'?'Add to shortlist':'加入遴选清单'}">
+          ${shortlist.has(p.id)?'✓':'＋'}
+        </button>
+        ${p.image?`<img src="${p.image}" alt="${t(p,'title')}" loading="lazy">`:`<span class="ph">${lang==='en'?'Image pending':'待添加图片'}</span>`}
+      </div>
+      <div class="info">
+        <div class="c-title">${t(p,'title')}</div>
+        ${lang==='zh'&&p.title_en?`<div class="c-title-en">${p.title_en}</div>`:''}
+        <div class="c-meta">
+          <span>${p.year!=='—'?p.year:''}${p.dimensions!=='—'?' · '+p.dimensions:''}</span>
+          <span class="c-region">${rl}</span>
+        </div>
+      </div>`;
+    c.onclick=()=>openLB(i);
+    g.appendChild(c);
+  });
+}
+
+function setupFilter(groupId, setter){
+  document.getElementById(groupId).addEventListener('click',e=>{
+    if(e.target.tagName!=='BUTTON')return;
+    document.querySelectorAll(`#${groupId} button`).forEach(b=>b.classList.remove('active'));
+    e.target.classList.add('active');
+    setter(e.target.dataset.v);
+    render();
+  });
+}
+
+setupFilter('artistFilter',v=>{artistF=v;});
+setupFilter('regionFilter',v=>{regionF=v;});
+
+document.getElementById('searchInput').addEventListener('input',e=>{searchQ=e.target.value.trim();render();});
+document.getElementById('sortSelect').addEventListener('change',e=>{sortBy=e.target.value;render();});
+
+// Lightbox
+function openLB(i){lbIdx=i;document.getElementById('lb').classList.add('open');document.body.style.overflow='hidden';renderLB(i);}
+function closeLB(e){if(e&&e.target!==e.currentTarget&&!e.target.classList.contains('lb-close'))return;document.getElementById('lb').classList.remove('open');document.body.style.overflow='';lbIdx=-1;}
+function navLB(d,e){if(e){e.stopPropagation();e.preventDefault();}const n=filtered.length;if(!n)return;lbIdx=(lbIdx+d+n)%n;renderLB(lbIdx);}
+
+function renderLB(i){
+  const p=filtered[i];if(!p)return;
+  const zh=lang==='zh';
+  document.getElementById('lbImg').innerHTML=p.image?`<img src="${p.image}" alt="${t(p,'title')}">`:`<span class="ph">${zh?'待添加图片':'Image pending'}</span>`;
+  const sel=shortlist.has(p.id);
+  document.getElementById('lbSide').innerHTML=`
+    <div class="lb-num">No.${String(p.id).padStart(3,'0')} / ${filtered.length}</div>
+    <h3>${t(p,'title')}</h3>
+    ${p.title_en?`<div class="lb-title-en">${p.title_en}</div>`:''}
+    <div class="lb-row"><span class="lb-label">${zh?'艺术家':'Artist'}</span><span class="lb-val">${t(p,'artist')}</span></div>
+    <div class="lb-row"><span class="lb-label">${zh?'年份':'Year'}</span><span class="lb-val">${p.year||'—'}</span></div>
+    <div class="lb-row"><span class="lb-label">${zh?'尺寸':'Dimensions'}</span><span class="lb-val">${p.dimensions||'—'}</span></div>
+    <div class="lb-row"><span class="lb-label">${zh?'题材地域':'Region'}</span><span class="lb-val">${regionLabel(p.region)}</span></div>
+    ${(p.desc_zh||p.desc_en)?`
+      <div class="lb-desc">
+        <div class="lb-desc-label">${zh?'作品描述':'Description'}</div>
+        <p>${t(p,'desc')}</p>
+      </div>`:''}
+    <button class="lb-sel-btn ${sel?'on':''}" onclick="toggleSL(${p.id});renderLB(${i});render();">
+      ${sel?(zh?'✓ 已加入遴选清单':'✓ On Shortlist'):(zh?'＋ 加入遴选清单':'＋ Add to Shortlist')}
+    </button>`;
+}
+
+document.addEventListener('keydown',e=>{if(lbIdx<0)return;if(e.key==='Escape')closeLB();if(e.key==='ArrowLeft')navLB(-1);if(e.key==='ArrowRight')navLB(1);});
+
+// Shortlist
+function saveSL(){localStorage.setItem('sl_ids',JSON.stringify([...shortlist]));updateSLFloat();}
+function updateSLFloat(){
+  const f=document.getElementById('slFloat');const c=document.getElementById('slCount');
+  c.textContent=shortlist.size;
+  f.classList.toggle('empty',shortlist.size===0);
+}
+function toggleSL(id){if(shortlist.has(id))shortlist.delete(id);else shortlist.add(id);saveSL();render();}
+function openSL(){document.getElementById('slPanel').classList.add('open');document.body.style.overflow='hidden';renderSL();}
+function closeSL(){document.getElementById('slPanel').classList.remove('open');document.body.style.overflow='';}
+function clearSL(){shortlist.clear();saveSL();render();renderSL();}
+
+function renderSL(){
+  const body=document.getElementById('slBody');
+  if(shortlist.size===0){
+    body.innerHTML=`<div class="sl-empty">${lang==='en'?'Click ＋ on any painting to add it here':'点击画作上的 ＋ 即可加入遴选清单'}</div>`;
+    return;
+  }
+  const items=paintings.filter(p=>shortlist.has(p.id));
+  body.innerHTML=items.map(p=>`
+    <div class="sl-item">
+      <div class="sl-thumb">${p.image?`<img src="${p.image}">`:`<span style="font-size:0.55rem;color:var(--text-faint)">No.${String(p.id).padStart(3,'0')}</span>`}</div>
+      <div class="sl-info">
+        <div class="sl-t">${t(p,'title')}</div>
+        <div class="sl-m">${t(p,'artist')} · ${p.year} · ${regionLabel(p.region)}</div>
+      </div>
+      <button class="sl-rm" onclick="toggleSL(${p.id});render();renderSL();">✕</button>
+    </div>`).join('');
+}
+
+function exportSL(){
+  const items=paintings.filter(p=>shortlist.has(p.id));
+  if(!items.length)return;
+  const zh=lang==='zh';
+  let txt=zh?'刘家油画藏品 — 遴选清单\n':'Liu Family Oil Paintings — Shortlist\n';
+  txt+='═'.repeat(50)+'\n\n';
+  items.forEach((p,i)=>{
+    txt+=`${i+1}. No.${String(p.id).padStart(3,'0')}  ${t(p,'title')}`;
+    if(lang==='zh'&&p.title_en)txt+=` (${p.title_en})`;
+    txt+='\n';
+    txt+=`   ${zh?'艺术家':'Artist'}: ${t(p,'artist')}  |  ${zh?'年份':'Year'}: ${p.year}  |  ${zh?'尺寸':'Size'}: ${p.dimensions}\n`;
+    txt+=`   ${zh?'题材地域':'Region'}: ${regionLabel(p.region)}\n`;
+    if(t(p,'desc'))txt+=`   ${t(p,'desc')}\n`;
+    txt+='\n';
+  });
+  txt+=`\n${zh?'共':'Total:'} ${items.length} ${zh?'幅':'works'}`;
+  const blob=new Blob([txt],{type:'text/plain;charset=utf-8'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);
+  a.download=zh?'遴选清单.txt':'shortlist.txt';a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+// Init
+setLang('en');updateSLFloat();
+</script>
+</body>
+</html>
