@@ -238,13 +238,51 @@
   }
 
   @media print{
-    .lang-toggle,.controls-bar,.lb,.shortlist-float,.sl-panel,.sel-btn,.search-box,.sort-select{display:none!important;}
+    .lang-toggle,.controls-bar,.lb,.shortlist-float,.sl-panel,.sel-btn,.search-box,.sort-select,.press-lb{display:none!important;}
     .gallery{grid-template-columns:repeat(3,1fr);gap:0.8rem;}
     .card{break-inside:avoid;box-shadow:none!important;transform:none!important;}
     body{background:white;}
   }
 
   @keyframes fadeUp{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:translateY(0);}}
+
+  /* ── PRESS & DOCUMENTS ── */
+  .press-section{max-width:1000px;margin:0 auto;padding:0 2rem 2.5rem;}
+  .press-section .section-label{
+    font-size:0.7rem;color:var(--text-faint);letter-spacing:0.1em;text-transform:uppercase;
+    font-family:var(--sans);margin-bottom:1.2rem;padding-bottom:0.6rem;border-bottom:1px solid var(--border);
+  }
+  .press-grid{display:grid;grid-template-columns:1fr 1fr;gap:2rem;}
+  .press-scans{display:flex;gap:0.8rem;flex-wrap:wrap;}
+  .press-scans a{
+    display:block;width:100px;height:130px;overflow:hidden;border:1px solid var(--border);
+    background:var(--bg-warm);transition:all 0.2s;flex-shrink:0;
+  }
+  .press-scans a:hover{transform:translateY(-2px);box-shadow:var(--shadow-md);}
+  .press-scans a img{width:100%;height:100%;object-fit:cover;}
+  .press-col h4{font-family:var(--serif-en);font-weight:400;font-size:0.88rem;color:var(--text-mid);margin-bottom:0.6rem;font-style:italic;}
+  .doc-list{list-style:none;}
+  .doc-list li{padding:0.5rem 0;border-bottom:1px solid var(--border-light);}
+  .doc-list li a{
+    text-decoration:none;color:var(--text-mid);font-size:0.8rem;font-family:var(--sans);
+    display:flex;align-items:center;gap:0.5rem;transition:color 0.15s;
+  }
+  .doc-list li a:hover{color:var(--accent);}
+  .doc-list li a .doc-icon{font-size:0.7rem;color:var(--text-faint);flex-shrink:0;width:1.2rem;}
+  .doc-list li a .doc-size{font-size:0.65rem;color:var(--text-faint);margin-left:auto;white-space:nowrap;}
+
+  .press-lb{display:none;position:fixed;inset:0;z-index:1200;background:var(--overlay);align-items:center;justify-content:center;padding:2rem;cursor:pointer;}
+  .press-lb.open{display:flex;}
+  .press-lb img{max-width:90vw;max-height:90vh;object-fit:contain;box-shadow:0 8px 40px rgba(0,0,0,0.3);}
+  .press-lb-nav{position:absolute;top:50%;transform:translateY(-50%);width:40px;height:40px;border:1px solid rgba(255,255,255,0.25);background:rgba(255,255,255,0.08);color:white;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.2rem;transition:all 0.2s;z-index:10;}
+  .press-lb-nav:hover{background:rgba(255,255,255,0.2);}
+  .press-lb-nav.prev{left:1.5rem;}
+  .press-lb-nav.next{right:1.5rem;}
+
+  @media(max-width:768px){
+    .press-grid{grid-template-columns:1fr;}
+    .press-scans a{width:80px;height:104px;}
+  }}
 </style>
 </head>
 <body>
@@ -263,25 +301,88 @@
 <section class="bios">
   <div class="bio-card">
     <h2>刘南生</h2>
-    <div class="name-en">Nansheng Liu</div>
+    <div class="name-en">Nansheng Liu (1937–2025)</div>
     <div class="bio-text i18n"
-      data-zh="在此填写刘南生先生的艺术生涯简介——师承、风格特点、重要展览或收藏经历等。"
-      data-en="Brief biography of Nansheng Liu's artistic career — training, stylistic characteristics, notable exhibitions or collections.">
-      在此填写刘南生先生的艺术生涯简介——师承、风格特点、重要展览或收藏经历等。
+      data-zh="油画家。1937年生于福建泉州，少年时期于上海育才学校（陶行知创办）接受专业绘画训练，1953年入浙江美术学院（今中国美术学院）油画系，师从黎冰鸿、马三和、费以复、丁正献等。1958年毕业后被分配至新疆，先后任新疆美协、新疆展览馆、新疆师范大学美术系副主任及副教授，在疆工作二十九年，深入天山南北各少数民族聚居区写生创作。1987年调至桂林；1992年自费赴肯尼亚、南非进行艺术考察；1994年应邀赴美国举办《双喜画展》后定居加州，直至2025年10月辞世。六次入选全国美展。作品为中国美术馆、桂林博物馆、中国美术学院、新疆博物馆收藏。中国美术家协会会员，美国油画家协会会员。"
+      data-en="Oil painter. Born 1937 in Quanzhou, Fujian. Trained at Tao Xingzhi's Yucai School in Shanghai, then admitted to the Zhejiang Academy of Fine Arts (now China Academy of Art) in 1953, studying under Li Binghong, Ma Sanhe, Fei Yifu, and Ding Zhengxian. After graduating in 1958, he was assigned to Xinjiang, where he spent twenty-nine years as Associate Professor and Deputy Chair of the Fine Arts Department at Xinjiang Normal University, documenting the life of Uyghur, Kazakh, and Kyrgyz peoples through painting and fieldwork across the Tianshan region. He later worked in Guilin (1987–1992), undertook self-funded art expeditions in Kenya and South Africa (1992–1993), and settled in California in 1994 following the Double Joy Exhibition in San Diego, painting until his passing in October 2025. Selected for the National Art Exhibition six times. Works held by the National Art Museum of China, Guilin Museum, China Academy of Art, and Xinjiang Museum. Member of the China Artists Association and the American Society of Oil Painters.">
+      Oil painter. Born 1937 in Quanzhou, Fujian. Trained at Tao Xingzhi's Yucai School in Shanghai, then admitted to the Zhejiang Academy of Fine Arts (now China Academy of Art) in 1953, studying under Li Binghong, Ma Sanhe, Fei Yifu, and Ding Zhengxian. After graduating in 1958, he was assigned to Xinjiang, where he spent twenty-nine years as Associate Professor and Deputy Chair of the Fine Arts Department at Xinjiang Normal University, documenting the life of Uyghur, Kazakh, and Kyrgyz peoples through painting and fieldwork across the Tianshan region. He later worked in Guilin (1987–1992), undertook self-funded art expeditions in Kenya and South Africa (1992–1993), and settled in California in 1994 following the Double Joy Exhibition in San Diego, painting until his passing in October 2025. Selected for the National Art Exhibition six times. Works held by the National Art Museum of China, Guilin Museum, China Academy of Art, and Xinjiang Museum. Member of the China Artists Association and the American Society of Oil Painters.
     </div>
     <div class="count-line" id="countGrandfather"></div>
   </div>
   <div class="bio-card">
     <h2>刘韧</h2>
-    <div class="name-en">Ren Liu</div>
+    <div class="name-en">Ren Liu (b. 1969, Urumqi)</div>
     <div class="bio-text i18n"
-      data-zh="在此填写刘韧先生的艺术生涯简介——师承、风格特点、重要展览或收藏经历等。"
-      data-en="Brief biography of Ren Liu's artistic career — training, stylistic characteristics, notable exhibitions or collections.">
-      在此填写刘韧先生的艺术生涯简介——师承、风格特点、重要展览或收藏经历等。
+      data-zh="油画家，刘南生之子。1969年生于新疆乌鲁木齐。1992年考入中国美术学院油画系，1996年获学士学位——与父亲毕业于同一专业，相隔近四十年。曾参加1999年旧金山第十五届国际艺术展，2005年宁波"月落浪花·浙江油画展"获佳作奖。2007–2008年赴藏区采风后，创作完成四幅大尺寸藏族宗教生活题材油画——《圣之旅》《诵经》《门前的女孩》《圣洁》，即本次捐赠所收入的作品。后移居美国加州，现以艺术教学为主，持续从事写实油画创作。曾接受双语杂志《中土 Middle Land》专访。"
+      data-en="Oil painter, son of Nansheng Liu. Born 1969 in Urumqi, Xinjiang. He earned his BFA from the Department of Oil Painting at the China Academy of Art in Hangzhou in 1996 — the same program from which his father had graduated nearly four decades earlier. His exhibition record includes the 15th Annual International Arts Exhibition in San Francisco (1999) and an Honorable Mention at the Zhejiang Oil Painting Show in Ningbo (2005). In 2007–2008, following fieldwork in Tibetan regions, he completed a series of four large oil paintings on Tibetan religious life — pilgrimage, prostration, chanting, and the sacred — included in the current donation. He later immigrated to California, where he works primarily as an art instructor while continuing his studio practice in figurative oil painting. Featured in an exclusive interview with Middle Land magazine.">
+      Oil painter, son of Nansheng Liu. Born 1969 in Urumqi, Xinjiang. He earned his BFA from the Department of Oil Painting at the China Academy of Art in Hangzhou in 1996 — the same program from which his father had graduated nearly four decades earlier. His exhibition record includes the 15th Annual International Arts Exhibition in San Francisco (1999) and an Honorable Mention at the Zhejiang Oil Painting Show in Ningbo (2005). In 2007–2008, following fieldwork in Tibetan regions, he completed a series of four large oil paintings on Tibetan religious life — pilgrimage, prostration, chanting, and the sacred — included in the current donation. He later immigrated to California, where he works primarily as an art instructor while continuing his studio practice in figurative oil painting. Featured in an exclusive interview with Middle Land magazine.
     </div>
     <div class="count-line" id="countFather"></div>
   </div>
 </section>
+
+<section class="press-section">
+  <div class="section-label i18n" data-zh="文献资料" data-en="Press & Documents">Press & Documents</div>
+  <div class="press-grid">
+    <div class="press-col">
+      <h4 class="i18n" data-zh="媒体报道 · 《中土》杂志 2014年2/3月刊" data-en="Press · Middle Land Magazine, Feb/Mar 2014">Press · Middle Land Magazine, Feb/Mar 2014</h4>
+      <div class="press-scans">
+        <a href="#" onclick="openPressLB(0,event)"><img src="press/middle_land_cover.jpg" alt="Middle Land cover" loading="lazy"></a>
+        <a href="#" onclick="openPressLB(1,event)"><img src="press/middle_land_p1.jpg" alt="Contents page" loading="lazy"></a>
+        <a href="#" onclick="openPressLB(2,event)"><img src="press/middle_land_p2.jpg" alt="Article page 1" loading="lazy"></a>
+        <a href="#" onclick="openPressLB(3,event)"><img src="press/middle_land_p3.jpg" alt="Article page 2" loading="lazy"></a>
+        <a href="#" onclick="openPressLB(4,event)"><img src="press/middle_land_p4.jpg" alt="Article page 3" loading="lazy"></a>
+      </div>
+    </div>
+    <div class="press-col">
+      <h4 class="i18n" data-zh="文档下载" data-en="Documents">Documents</h4>
+      <ul class="doc-list">
+        <li><a href="press/liu_nansheng_cv.pdf" target="_blank">
+          <span class="doc-icon">📄</span>
+          <span class="i18n" data-zh="刘南生简历 (中英双语)" data-en="Curriculum Vitae (bilingual)">Curriculum Vitae (bilingual)</span>
+          <span class="doc-size">PDF</span>
+        </a></li>
+        <li><a href="press/liu_nansheng_bio.pdf" target="_blank">
+          <span class="doc-icon">📄</span>
+          <span class="i18n" data-zh="艺术简述" data-en="Art Overview">Art Overview</span>
+          <span class="doc-size">PDF</span>
+        </a></li>
+        <li><a href="press/liu_nansheng_art_statement.pdf" target="_blank">
+          <span class="doc-icon">📄</span>
+          <span class="i18n" data-zh="我的艺术追求 — 刘南生自述" data-en="My Artistic Pursuit — Artist Statement">My Artistic Pursuit — Artist Statement</span>
+          <span class="doc-size">PDF</span>
+        </a></li>
+        <li><a href="press/liu_nansheng_interview.pdf" target="_blank">
+          <span class="doc-icon">📄</span>
+          <span class="i18n" data-zh="高更画廊采访 · 60多年的艺术生涯" data-en="Gauguin Gallery Interview · A 60-Year Career">Gauguin Gallery Interview · A 60-Year Career</span>
+          <span class="doc-size">PDF</span>
+        </a></li>
+        <li><a href="press/liu_nansheng_publications.pdf" target="_blank">
+          <span class="doc-icon">📄</span>
+          <span class="i18n" data-zh="部分出版资料" data-en="Selected Publications">Selected Publications</span>
+          <span class="doc-size">PDF</span>
+        </a></li>
+        <li><a href="press/liu_ren_cv.pdf" target="_blank">
+          <span class="doc-icon">📄</span>
+          <span class="i18n" data-zh="刘韧简历 (中英双语)" data-en="Ren Liu — Curriculum Vitae (bilingual)">Ren Liu — Curriculum Vitae (bilingual)</span>
+          <span class="doc-size">PDF</span>
+        </a></li>
+        <li><a href="press/liu_ren_interview.pdf" target="_blank">
+          <span class="doc-icon">📄</span>
+          <span class="i18n" data-zh="刘韧《中土》杂志专访" data-en="Ren Liu — Middle Land Interview">Ren Liu — Middle Land Interview</span>
+          <span class="doc-size">PDF</span>
+        </a></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- Press Lightbox -->
+<div class="press-lb" id="pressLB" onclick="closePressLB()">
+  <button class="press-lb-nav prev" onclick="navPressLB(-1,event)">‹</button>
+  <img id="pressLBImg" src="" alt="">
+  <button class="press-lb-nav next" onclick="navPressLB(1,event)">›</button>
+</div>
 
 <div class="controls-bar">
   <div class="pill-group" id="artistFilter">
@@ -343,7 +444,7 @@
 
 <footer>
   <div class="i18n" data-zh="本目录仅供博物馆评估与遴选参考使用" data-en="This catalog is for museum evaluation and selection reference only">本目录仅供博物馆评估与遴选参考使用</div>
-  <div class="contact i18n" data-zh="联系方式：[在此填写]" data-en="Contact: [fill in here]">联系方式：[在此填写]</div>
+  <div class="contact i18n" data-zh="联系方式：renliu99@gmail.com" data-en="Contact: renliu99@gmail.com">Contact: renliu99@gmail.com</div>
 </footer>
 
 <script>
@@ -531,6 +632,13 @@ function exportSL(){
   a.download=zh?'遴选清单.txt':'shortlist.txt';a.click();
   URL.revokeObjectURL(a.href);
 }
+
+// Press Lightbox
+const pressImages=['press/middle_land_cover.jpg','press/middle_land_p1.jpg','press/middle_land_p2.jpg','press/middle_land_p3.jpg','press/middle_land_p4.jpg'];
+let pressIdx=-1;
+function openPressLB(i,e){if(e){e.preventDefault();e.stopPropagation();}pressIdx=i;document.getElementById('pressLBImg').src=pressImages[i];document.getElementById('pressLB').classList.add('open');document.body.style.overflow='hidden';}
+function closePressLB(){document.getElementById('pressLB').classList.remove('open');document.body.style.overflow='';pressIdx=-1;}
+function navPressLB(d,e){if(e){e.stopPropagation();e.preventDefault();}pressIdx=(pressIdx+d+pressImages.length)%pressImages.length;document.getElementById('pressLBImg').src=pressImages[pressIdx];}
 
 // Init
 setLang('en');updateSLFloat();
