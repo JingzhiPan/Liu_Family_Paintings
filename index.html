@@ -66,6 +66,23 @@
   .shortlist-float .count{background:var(--accent);padding:0.1rem 0.45rem;border-radius:2px;font-size:0.7rem;min-width:1.4rem;text-align:center;}
   .shortlist-float.empty{opacity:0.5;pointer-events:none;}
 
+  /* ── SITE NAV ── */
+  .site-nav{
+    max-width:1240px;margin:0 auto;
+    display:flex;justify-content:center;gap:0;
+    border-bottom:1px solid var(--border);background:var(--white);
+  }
+  .site-nav button{
+    padding:0.9rem 2rem;border:none;background:transparent;
+    font-family:var(--serif-en);font-size:0.9rem;letter-spacing:0.06em;
+    color:var(--text-light);cursor:pointer;transition:all 0.2s;
+    border-bottom:2px solid transparent;position:relative;
+  }
+  .site-nav button.active{color:var(--text);border-bottom-color:var(--text);}
+  .site-nav button:hover:not(.active){color:var(--text-mid);}
+  .view-panel{display:none;}
+  .view-panel.active{display:block;}
+
   /* ── ARTIST BIOS ── */
   .bios{max-width:1000px;margin:0 auto;padding:2.5rem 2rem;display:grid;grid-template-columns:1fr 1fr;gap:2.5rem;}
   .bio-card{padding:1.8rem;background:var(--white);border:1px solid var(--border);}
@@ -239,7 +256,8 @@
   }
 
   @media print{
-    .lang-toggle,.controls-bar,.lb,.shortlist-float,.sl-panel,.sel-btn,.search-box,.sort-select,.press-lb{display:none!important;}
+    .lang-toggle,.controls-bar,.lb,.shortlist-float,.sl-panel,.sel-btn,.search-box,.sort-select,.press-lb,.site-nav{display:none!important;}
+    .view-panel{display:block!important;}
     .gallery{grid-template-columns:repeat(3,1fr);gap:0.8rem;}
     .card{break-inside:avoid;box-shadow:none!important;transform:none!important;}
     body{background:white;}
@@ -299,6 +317,12 @@
   <div class="tag i18n" data-zh="供博物馆评估与遴选 · 共 87 幅" data-en="For Museum Evaluation & Selection · 87 Works">供博物馆评估与遴选 · 共 87 幅</div>
 </header>
 
+<nav class="site-nav">
+  <button class="active" onclick="switchView('collection')" data-zh="藏品" data-en="Collection" id="navCollection">Collection</button>
+  <button onclick="switchView('artists')" data-zh="艺术家" data-en="Artists" id="navArtists">Artists</button>
+</nav>
+
+<div id="view-artists" class="view-panel">
 <section class="bios">
   <div class="bio-card">
     <div class="bio-header">
@@ -382,6 +406,8 @@
   </div>
 </section>
 
+</div><!-- end view-artists -->
+
 <!-- Press Lightbox -->
 <div class="press-lb" id="pressLB" onclick="closePressLB()">
   <button class="press-lb-nav prev" onclick="navPressLB(-1,event)">‹</button>
@@ -389,6 +415,7 @@
   <button class="press-lb-nav next" onclick="navPressLB(1,event)">›</button>
 </div>
 
+<div id="view-collection" class="view-panel active">
 <div class="controls-bar">
   <div class="pill-group" id="artistFilter">
     <button class="active" data-v="all" data-zh="全部" data-en="All">全部</button>
@@ -413,6 +440,7 @@
 </div>
 
 <div class="gallery" id="gallery"></div>
+</div><!-- end view-collection -->
 
 <!-- Lightbox -->
 <div class="lb" id="lb" onclick="closeLB(event)">
@@ -475,6 +503,7 @@ function setLang(l){
   lang=l;
   document.querySelectorAll('.lang-toggle button').forEach(b=>b.classList.toggle('active',(l==='zh'&&b.textContent==='中文')||(l==='en'&&b.textContent==='EN')));
   document.querySelectorAll('.i18n').forEach(el=>{const v=el.getAttribute('data-'+l);if(v)el.textContent=v;});
+  document.querySelectorAll('.site-nav button').forEach(b=>{const v=b.getAttribute('data-'+l);if(v)b.textContent=v;});
   document.querySelectorAll('#artistFilter button').forEach(b=>{const v=b.getAttribute('data-'+l);if(v)b.textContent=v;});
   document.querySelectorAll('#regionFilter button').forEach(b=>{const v=b.getAttribute('data-'+l);if(v)b.textContent=v;});
   document.getElementById('searchInput').placeholder=l==='en'?'Search title or description…':'搜索标题或描述…';
@@ -636,6 +665,15 @@ function exportSL(){
   const a=document.createElement('a');a.href=URL.createObjectURL(blob);
   a.download=zh?'遴选清单.txt':'shortlist.txt';a.click();
   URL.revokeObjectURL(a.href);
+}
+
+// View switching
+function switchView(view){
+  document.getElementById('view-collection').classList.toggle('active',view==='collection');
+  document.getElementById('view-artists').classList.toggle('active',view==='artists');
+  document.getElementById('navCollection').classList.toggle('active',view==='collection');
+  document.getElementById('navArtists').classList.toggle('active',view==='artists');
+  window.scrollTo(0,0);
 }
 
 // Press Lightbox
